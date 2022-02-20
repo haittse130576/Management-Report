@@ -2,16 +2,15 @@
   <div class="example">
     <CNav variant="tabs">
       <CNavItem>
-        <CNavLink href="#" active>
-          <CIcon icon="cil-media-play" class="me-2" />
+        <CNavLink active>
+          Submit File
         </CNavLink>
       </CNavItem>
-      <CNavItem>
-        <CNavLink :href="url" target="_blank">
-          <CIcon icon="cil-code" class="me-2" />
-          Code
+      <!-- <CNavItem>
+        <CNavLink href="#/dashboard" active>
+          Submit File
         </CNavLink>
-      </CNavItem>
+      </CNavItem> -->
     </CNav>
     <CTabContent class="rounded-bottom">
       <CTabPane class="p-3 preview" visible>
@@ -22,7 +21,6 @@
 </template>
 
 <script>
-import pkg from '../../package.json'
 export default {
   name: 'DocsExample',
   props: {
@@ -31,13 +29,6 @@ export default {
       default: undefined,
       required: false,
     },
-  },
-  setup(props) {
-    const url = `https://coreui.io/vue/docs/${pkg.config.coreui_library_short_version}/${props.href}`
-
-    return {
-      url,
-    }
   },
 }
 </script>

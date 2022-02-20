@@ -1,6 +1,6 @@
 <template>
   <div class="bg-light min-vh-100 d-flex flex-row align-items-center">
-    <CContainer>
+    <CContainer style="width: 45%">
       <CRow class="justify-content-center">
         <CCol :md="8">
           <CCardGroup>
@@ -14,8 +14,9 @@
                       <CIcon icon="cil-user" />
                     </CInputGroupText>
                     <CFormInput
-                      placeholder="Username"
-                      autocomplete="username"
+                      v-model="user.email"
+                      placeholder="email"
+                      autocomplete="email"
                     />
                   </CInputGroup>
                   <CInputGroup class="mb-4">
@@ -24,13 +25,14 @@
                     </CInputGroupText>
                     <CFormInput
                       type="password"
+                      v-model="user.password"
                       placeholder="Password"
                       autocomplete="current-password"
                     />
                   </CInputGroup>
                   <CRow>
                     <CCol :xs="6">
-                      <CButton color="primary" class="px-4"> Login </CButton>
+                      <CButton color="primary" @click="login()" class="px-4"> Login </CButton>
                     </CCol>
                     <CCol :xs="6" class="text-right">
                       <CButton color="link" class="px-0">
@@ -41,21 +43,6 @@
                 </CForm>
               </CCardBody>
             </CCard>
-            <CCard class="text-white bg-primary py-5" style="width: 44%">
-              <CCardBody class="text-center">
-                <div>
-                  <h2>Sign up</h2>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                    sed do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua.
-                  </p>
-                  <CButton color="light" variant="outline" class="mt-3">
-                    Register Now!
-                  </CButton>
-                </div>
-              </CCardBody>
-            </CCard>
           </CCardGroup>
         </CCol>
       </CRow>
@@ -64,7 +51,34 @@
 </template>
 
 <script>
+import { mapActions, mapGetters, mapState } from 'vuex'
 export default {
   name: 'Login',
+  data() {
+    return {
+      accounts:[],
+       user:{
+        email:'',
+        password:''
+      },
+    }
+  },
+  computed: {
+
+  },
+  methods: {
+    ...mapActions(['loginAction']),
+    async login() {
+      let test = await this.loginAction(this.user)
+      if(test.data){
+        console.log("login success")
+        this.$router.push('/dashboard')
+      }
+      else{
+        console.log("fail");
+      }
+    },
+  },
+
 }
 </script>
