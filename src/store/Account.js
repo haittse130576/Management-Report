@@ -3,7 +3,8 @@ import http from '../http-common'
 const account = {
     state: {
         accounts: [],
-        accountResult:{}
+        accountResult:{},
+        accountDetail:{}
     },
     getters: {
         getAccounts(state) {
@@ -11,6 +12,9 @@ const account = {
         },
         getAccountResult(state){
             return state.accountResult
+        },
+        getAccountDetail(state){
+            return state.accountDetail
         }
     },
     mutations: {
@@ -19,6 +23,9 @@ const account = {
         },
         setAccountResult(state, res){
             state.accountResult = res
+        },
+        setAccountDetail(state, res){
+            state.accountDetail = res
         }
     },
     actions: {
@@ -50,6 +57,13 @@ const account = {
             context.commit('setAccountResult', response.data.data)
             console.log(response);
             return response
+        },
+        async getAccountByEmail(context, email){
+            const response = await http.get(`/api/accounts/detail/${email}`)
+            if(response.data.status === 'success'){
+                context.commit('setAccountDetail', response.data)
+            }
+            return response.data
         }
     }
 

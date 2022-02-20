@@ -63,11 +63,32 @@
           header-align="center"
           align="right"
         />
+        <el-table-column
+          prop="phone"
+          label="Status"
+          header-align="center"
+          align="right"
+        >
+          <template #default="scope">
+            <div v-if="scope.row.status === 'Active'">
+              <el-tag type="success">Active</el-tag>
+            </div>
+            <div v-else-if="scope.row.status === 'Inactive'">
+              <el-tag type="danger">Inactive</el-tag>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="Action" header-align="center">
-          <el-button-group class="ml-4">
-            <el-button type="primary" :icon="Edit"></el-button>
-            <el-button type="danger" :icon="Delete"></el-button>
-          </el-button-group>
+          <template #default = 'scope'>
+            <el-button-group class="ml-4">
+              <el-button
+                type="primary"
+                :icon="Edit"
+                @click="onEdit(scope.$index, scope.row.email)"
+              ></el-button>
+              <el-button type="danger" :icon="Delete"></el-button>
+            </el-button-group>
+          </template>
         </el-table-column>
       </el-table>
       <div class="d-flex flex-row-reverse">
@@ -76,18 +97,27 @@
           layout="prev, pager, next"
           :page-size="getAccountResult.pageSize"
           :total="getAccountResult.totalCount"
+          :current-page="getAccountResult.pageIndex"
+          @current-change="setPage"
         >
         </el-pagination>
       </div>
     </div>
+    <account-detail-dialog
+        :dialogVisible="dialogVisible"
+        @close='handleAccountDetailDialogClose'
+    />
   </div>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Search, Edit, Delete } from '@element-plus/icons-vue'
+import AccountDetailDialog from './AccountDetailDialog.vue'
 export default {
   name: 'Groups',
-  components: {},
+  components: {
+      AccountDetailDialog
+  },
   data() {
     return {
       form: {
@@ -102,6 +132,7 @@ export default {
       roles: [],
       searchResult: {},
       searchValue: {},
+      dialogVisible: false,
     }
   },
   computed: {
@@ -117,6 +148,7 @@ export default {
       'getAccountsAction',
       'getListRolesAction',
       'searchListAccounts',
+      'getAccountByEmail',
     ]),
     async init() {
       this.roles = await this.getListRolesAction()
@@ -143,9 +175,39 @@ export default {
       if (this.form.status.trim() === 'All') {
         this.searchValue.status = null
       }
-      console.log(this.searchValue)
       this.searchResult = await this.searchListAccounts(this.searchValue)
     },
+    async setPage(val) {
+      this.searchValue = {
+        fullname: this.form.fullname,
+        email: this.form.email,
+        roleId: this.form.role,
+        status: this.form.status,
+        pageNumber: val,
+        pageSize: getAccountResult.pageSize,
+      }
+      if (this.form.fullname.trim() === '') {
+        this.searchValue.fullname = null
+      }
+      if (this.form.email.trim() === '') {
+        this.searchValue.email = null
+      }
+      if (this.form.role === 'All') {
+        this.searchValue.roleId = 0
+      }
+      if (this.form.status.trim() === 'All') {
+        this.searchValue.status = null
+      }
+      this.searchResult = await this.searchListAccounts(this.searchValue)
+    },
+    async onEdit(index, email) {
+      await this.getAccountByEmail(email)
+      this.dialogVisible = true
+
+    },
+    handleAccountDetailDialogClose(){
+        this.dialogVisible = false
+    }
   },
   mounted() {
     this.init()
