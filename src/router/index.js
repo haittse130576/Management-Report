@@ -1,5 +1,6 @@
 import { h, resolveComponent } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
+import {getAuth, onAuthStateChanged} from 'firebase/auth'
 
 import DefaultLayout from '@/layouts/DefaultLayout'
 
@@ -50,7 +51,7 @@ const routes = [
 
   {
     path: '/pages',
-    redirect: '/pages/404',
+    redirect: '/404',
     name: 'Page',
     meta: { requiresVisitor: true },
     component: {
@@ -60,7 +61,7 @@ const routes = [
     },
     children: [
       {
-        path: 'login',
+        path: '/login',
         name: 'Login',
         component: () => import('@/views/pages/Login'),
       }
@@ -78,6 +79,30 @@ const router = createRouter({
     // always scroll to top
     return { top: 0 }
   },
+  
 })
+const getCurrentUser = () =>{
+  return new Promise((resolve, reject) =>{
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+      (user) =>{
+        removeListener()
+      },
+      reject
+    )
+  })
+}
+// router.beforeEach(async (to,from, next)=>{
+//   if(to.matched.some((record) => record.meta.requiresAuth)){
+//     if(await getCurrentUser()){
+//       next()
+//     }else{
+//       alert("You dont have access permission")
+//       next('/login')
+//     }
+//   }else{
+//     next()
+//   }
+// })
 
 export default router

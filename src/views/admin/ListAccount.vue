@@ -6,7 +6,6 @@
       ref="form"
       label-width="50px"
       :inline="true"
-      size="normal"
     >
       <el-form-item label="Name">
         <el-input v-model="form.fullname"></el-input>
@@ -18,6 +17,7 @@
         <el-select v-model="form.role">
           <el-option
             v-for="role in getListRoles"
+            :key="role.id"
             :label="role.name"
             :value="role.id"
           ></el-option>
@@ -36,7 +36,7 @@
   </div>
   <div class="mt-2 card bg-default">
     <div class="table-responsive">
-      <el-table :data="account" style="width: 100%" stripe>
+      <el-table ref="tableRef" :data="account" style="width: 100%" stripe>
         <el-table-column
           type="index"
           label="No."
@@ -64,22 +64,15 @@
           align="right"
         />
         <el-table-column
-          prop="phone"
           label="Status"
           header-align="center"
-          align="right"
+          align="center"
+          prop="status"
         >
-          <template #default="scope">
-            <div v-if="scope.row.status === 'Active'">
-              <el-tag type="success">Active</el-tag>
-            </div>
-            <div v-else-if="scope.row.status === 'Inactive'">
-              <el-tag type="danger">Inactive</el-tag>
-            </div>
-          </template>
+          
         </el-table-column>
         <el-table-column align="center" label="Action" header-align="center">
-          <template #default = 'scope'>
+          <template #default="scope">
             <el-button-group class="ml-4">
               <el-button
                 type="primary"
@@ -104,8 +97,8 @@
       </div>
     </div>
     <account-detail-dialog
-        :dialogVisible="dialogVisible"
-        @close='handleAccountDetailDialogClose'
+      :dialogVisible="dialogVisible"
+      @close="handleAccountDetailDialogClose"
     />
   </div>
 </template>
@@ -116,7 +109,7 @@ import AccountDetailDialog from './AccountDetailDialog.vue'
 export default {
   name: 'Groups',
   components: {
-      AccountDetailDialog
+    AccountDetailDialog,
   },
   data() {
     return {
@@ -203,11 +196,10 @@ export default {
     async onEdit(index, email) {
       await this.getAccountByEmail(email)
       this.dialogVisible = true
-
     },
-    handleAccountDetailDialogClose(){
-        this.dialogVisible = false
-    }
+    handleAccountDetailDialogClose() {
+      this.dialogVisible = false
+    },
   },
   mounted() {
     this.init()

@@ -1,84 +1,58 @@
 <template>
-  <div class="bg-light min-vh-100 d-flex flex-row align-items-center">
-    <CContainer style="width: 45%">
-      <CRow class="justify-content-center">
-        <CCol :md="8">
-          <CCardGroup>
-            <CCard class="p-4">
-              <CCardBody>
-                <CForm>
-                  <h1>Login</h1>
-                  <p class="text-medium-emphasis">Sign In to your account</p>
-                  <CInputGroup class="mb-3">
-                    <CInputGroupText>
-                      <CIcon icon="cil-user" />
-                    </CInputGroupText>
-                    <CFormInput
-                      v-model="user.email"
-                      placeholder="email"
-                      autocomplete="email"
-                    />
-                  </CInputGroup>
-                  <CInputGroup class="mb-4">
-                    <CInputGroupText>
-                      <CIcon icon="cil-lock-locked" />
-                    </CInputGroupText>
-                    <CFormInput
-                      type="password"
-                      v-model="user.password"
-                      placeholder="Password"
-                      autocomplete="current-password"
-                    />
-                  </CInputGroup>
-                  <CRow>
-                    <CCol :xs="6">
-                      <CButton color="primary" @click="login()" class="px-4"> Login </CButton>
-                    </CCol>
-                    <CCol :xs="6" class="text-right">
-                      <CButton color="link" class="px-0">
-                        Forgot password?
-                      </CButton>
-                    </CCol>
-                  </CRow>
-                </CForm>
-              </CCardBody>
-            </CCard>
-          </CCardGroup>
-        </CCol>
-      </CRow>
-    </CContainer>
-  </div>
-</template>
+    <div class="container py-5 h-100" :style="style">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong" style="border-radius: 1rem">
+            <div class="card-body p-5 text-center">
+              <h3 class="mb-5">Sign in</h3>
 
+              <button
+                @click="login"
+                class="btn btn-lg btn-block btn-primary"
+                style="background-color: #dd4b39"
+                type="submit"
+              >
+                <i class="fab fa-google me-2"></i> Sign in with google
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</template>
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import background from '@/assets/images/fpt_background.jpg'
 export default {
   name: 'Login',
-  data() {
+  setup() {
+    const router = useRouter()
+    const auth = getAuth()
+    const provider = new GoogleAuthProvider()
+    const style = `background-image:url(${background})`
+    const login = () => {
+      signInWithPopup(auth, provider).then((result) => {
+        const email = result.user.email
+        console.log(email)
+        if (!email.toLowerCase().includes('@fpt.edu.vn')) {
+          alert('Use FPT email to login again')
+          router.push('/login')
+        }else{
+          router.push('/')
+        }
+      })
+    }
+
+    
     return {
-      accounts:[],
-       user:{
-        email:'',
-        password:''
-      },
+      login,
+      style
     }
   },
-  computed: {
-
-  },
-  methods: {
-    ...mapActions(['loginAction']),
-    async login() {
-      let test = await this.loginAction(this.user)
-      if(test.data){
-        console.log("login success")
-        this.$router.push('/dashboard')
-      }
-      else{
-        console.log("fail");
-      }
-    },
-  },
-
 }
 </script>
+<style lang="scss">
+
+</style>
