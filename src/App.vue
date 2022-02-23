@@ -1,27 +1,29 @@
 <template>
-  <router-view />
+    <router-view />
 </template>
 <script>
 import { onBeforeMount, ref } from 'vue-demi'
 import { useRoute, useRouter } from 'vue-router'
-import {getAuth, onAuthStateChanged, signOut} from 'firebase/auth'
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth'
 export default {
-  setup(){
+  setup() {
     const router = useRouter()
     const route = useRoute()
     const isLogin = ref(false)
     let auth
-    onBeforeMount(() =>{
+    onBeforeMount(() => {
       auth = getAuth()
-      onAuthStateChanged(auth, (user)=>{
-        if(user){
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
           isLogin.value = true
-        }else{
+        } else {
           isLogin.value = false
         }
       })
     })
-  }
+
+   
+  },
 }
 </script>
 <style lang="scss">

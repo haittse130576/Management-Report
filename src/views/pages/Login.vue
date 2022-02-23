@@ -40,6 +40,7 @@ export default {
           alert('Use FPT email to login again')
           router.push('/login')
         }else{
+          
           router.push('/')
         }
       })

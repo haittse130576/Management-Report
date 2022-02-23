@@ -13,6 +13,9 @@ import 'element-plus/dist/index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "bootstrap/dist/js/bootstrap.js"
 import { initializeApp } from "firebase/app";
+import './styles/tailwind.css'
+// import firebase from './config/firebase'
+import {getStorage} from 'firebase/storage'
 
 const app = createApp(App)
 
@@ -26,7 +29,8 @@ const firebaseConfig = {
     appId: "1:830163943717:web:ab2a5064c7d4d9209c1acc"
   };
 
-  initializeApp(firebaseConfig)
+  const firebaseApp  = initializeApp(firebaseConfig)
+  const storage = getStorage(firebaseApp)
 
 app.use(store)
 app.use(router)
