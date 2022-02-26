@@ -1,15 +1,15 @@
 import { h, resolveComponent } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import {getAuth, onAuthStateChanged} from 'firebase/auth'
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 import DefaultLayout from '@/layouts/DefaultLayout'
-
+import UserLayout from '@/layouts/UserLayout'
 const routes = [
   {
-    path: '/',
-    name: 'Home',
+    path: '/admin',
+    name: 'Dashboard',
     component: DefaultLayout,
-    
+
     meta: { requiresAuth: true },
     redirect: '/dashboard',
     children: [
@@ -23,7 +23,7 @@ const routes = [
           import(/* webpackChunkName: "dashboard" */ '@/views/Dashboard.vue'),
       },
       {
-        path: '/admin',
+        path: '/',
         redirect: '/admin/list-accounts',
 
         name: 'Accounts',
@@ -34,17 +34,50 @@ const routes = [
         },
         children: [
           {
-            path: 'list-accounts',
+            path: 'admin/list-accounts',
             name: 'List Accounts',
             component: () => import('@/views/admin/ListAccount'),
           },
           {
-            path: 'groups',
+            path: 'admin/groups',
             name: 'Groups',
             component: () => import('@/views/admin/Groups'),
           }
         ],
       },
+
+    ],
+  },
+  {
+    path: '/',
+    name: 'Home',
+    component: UserLayout,
+
+    meta: { requiresAuth: true },
+    redirect: '/home',
+    children: [
+      {
+        path: '/home',
+        name: 'Home',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import(/* webpackChunkName: "dashboard" */ '@/views/user/Home.vue'),
+      },
+
+
+      {
+        path: 'user/submit',
+        name: 'Submission',
+        component: () => import('@/views/user/SubmitDetail.vue'),
+      },
+      {
+        path: 'user/project',
+        name: 'Project',
+        component: () => import('@/views/user/Project.vue'),
+      }
+
 
     ],
   },
@@ -79,13 +112,13 @@ const router = createRouter({
     // always scroll to top
     return { top: 0 }
   },
-  
+
 })
-const getCurrentUser = () =>{
-  return new Promise((resolve, reject) =>{
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
     const removeListener = onAuthStateChanged(
       getAuth(),
-      (user) =>{
+      (user) => {
         removeListener()
       },
       reject

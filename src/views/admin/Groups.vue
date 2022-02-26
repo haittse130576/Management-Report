@@ -31,19 +31,18 @@ import useStorate from '@/useStorage'
 export default {
   setup() {
     const file = ref(null)
-    const {uploadFile} = useStorate()
+    const reportName = ref("report_1")
+    const {uploadFile} = useStorate(reportName)
     function onChangeFile(event) {
       const selected = event.target.files[0]
       if (selected) {
         file.value = selected
-        console.log(file.value)
       } else {
         console.log(file)
       }
     }
     function onSubmit() {
       if(file.value) uploadFile(file.value)
-      
     }
 
     return {

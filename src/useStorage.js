@@ -1,10 +1,10 @@
 
 import { getStorage, ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 
-const useStorage = () => {
+const useStorage = (name) => {
     function uploadFile(file) {
         const storage = getStorage()
-        const filePath = `submit_doc/${file.name}`
+        const filePath = `${name.value}/submit_doc/${file.name}`
         try {
             const storageRef = ref(storage, filePath)
             const uploadTask = uploadBytesResumable(storageRef, file);
