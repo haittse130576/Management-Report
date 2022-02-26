@@ -14,7 +14,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import "bootstrap/dist/js/bootstrap.js"
 import "bootstrap"
 import { initializeApp } from "firebase/app";
-import './styles/tailwind.css'
 // import firebase from './config/firebase'
 import {getStorage} from 'firebase/storage'
 
