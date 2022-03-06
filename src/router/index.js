@@ -1,5 +1,6 @@
 import { h, resolveComponent } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { Role } from '../config/role'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 import DefaultLayout from '@/layouts/DefaultLayout'
@@ -10,7 +11,10 @@ const routes = [
     name: 'Dashboard',
     component: DefaultLayout,
 
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      authorize: [Role.Admin]
+    },
     redirect: '/admin/dashboard',
     children: [
       {
@@ -73,8 +77,10 @@ const routes = [
     path: '/',
     name: 'Home',
     component: UserLayout,
-
-    meta: { requiresAuth: true },
+    meta: {
+      requiresAuth: true,
+      authorize: [Role.Teacher, Role.Student]
+    },
     redirect: '/user/home',
     children: [
       {
@@ -136,22 +142,36 @@ const router = createRouter({
 const getCurrentUser = () => {
   var user = sessionStorage.getItem('USER');
   if (user) {
-    console.log(user);
-    return true
+    return JSON.parse(user)
   }
-  return false
+  return null
 }
 router.beforeEach(async (to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (getCurrentUser()) {
-      next()
-    } else {
-      alert("You dont have access permission")
-      next('/login')
-    }
-  } else {
-    next()
+  const { authorize } = to.meta
+  const currentUser = getCurrentUser()
+  if(currentUser.roleName === Role.Staff || currentUser.roleName === Role.Admin){
+    currentUser.roleName = Role.Admin
   }
+
+  if (authorize) {
+    if (!currentUser) {
+      alert("You dont have access permission")
+      return next({
+        path: '/login',
+        query: { returnUrl: to.path }
+      })
+    }
+    else {
+      if (authorize.length && !authorize.includes(currentUser.roleName)) {
+        alert("You dont have access permission")
+        return next({
+          path: '/login',
+          query: { returnUrl: to.path }
+        })
+      }
+    }
+  }
+  next()
 })
 
 export default router

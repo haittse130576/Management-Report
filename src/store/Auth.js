@@ -1,6 +1,5 @@
 
 import http from '../http-common'
-import { useRouter } from 'vue-router'
 const auth = {
     namespaced: true,
     state: {
