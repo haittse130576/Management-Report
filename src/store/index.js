@@ -2,8 +2,8 @@ import {createLogger, createStore } from 'vuex'
 
 import Account from './Account'
 import Role from './Role'
-import http from '../http-common'
 import auth from './Auth'
+import project from './Project'
 
 // const auth = {
 //   namespaced: true,
@@ -55,7 +55,8 @@ export default createStore({
   modules: {
     Account,
     Role,
-    auth
+    auth,
+    project
   },
 })
 
