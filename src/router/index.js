@@ -6,15 +6,15 @@ import DefaultLayout from '@/layouts/DefaultLayout'
 import UserLayout from '@/layouts/UserLayout'
 const routes = [
   {
-    path: '/admin',
+    path: '/',
     name: 'Dashboard',
     component: DefaultLayout,
 
     meta: { requiresAuth: true },
-    redirect: '/dashboard',
+    redirect: '/admin/dashboard',
     children: [
       {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         name: 'Dashboard',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -25,7 +25,6 @@ const routes = [
       {
         path: '/',
         redirect: '/admin/list-accounts',
-
         name: 'Accounts',
         component: {
           render() {
@@ -34,15 +33,37 @@ const routes = [
         },
         children: [
           {
-            path: 'admin/list-accounts',
+            path: '/admin/list-accounts',
             name: 'List Accounts',
-            component: () => import('@/views/admin/ListAccount'),
+            component: () => import('@/views/admin/ListAccount.vue'),
           },
           {
-            path: 'admin/groups',
+            path: '/admin/groups',
             name: 'Groups',
-            component: () => import('@/views/admin/Groups'),
-          }
+            component: () => import('@/views/admin/Groups.vue'),
+          },
+        ],
+      },
+      {
+        path: '/',
+        redirect: '/admin/list-projects',
+        name: 'Projects',
+        component: {
+          render() {
+            return h(resolveComponent('router-view'))
+          },
+        },
+        children: [
+          {
+            path: '/admin/list-projects',
+            name: 'List Projects',
+            component: () => import('@/views/admin/ListProjects.vue'),
+          },
+          {
+            path: '/admin/groups',
+            name: 'Groups',
+            component: () => import('@/views/admin/Groups.vue'),
+          },
         ],
       },
 
@@ -54,10 +75,10 @@ const routes = [
     component: UserLayout,
 
     meta: { requiresAuth: true },
-    redirect: '/home',
+    redirect: '/user/home',
     children: [
       {
-        path: '/home',
+        path: '/user/home',
         name: 'Home',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -65,15 +86,13 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "dashboard" */ '@/views/user/Home.vue'),
       },
-
-
       {
-        path: 'user/submit',
+        path: '/user/submit',
         name: 'Submission',
         component: () => import('@/views/user/SubmitDetail.vue'),
       },
       {
-        path: 'user/project',
+        path: '/user/project',
         name: 'Project',
         component: () => import('@/views/user/Project.vue'),
       }
@@ -96,7 +115,7 @@ const routes = [
       {
         path: '/login',
         name: 'Login',
-        component: () => import('@/views/pages/Login'),
+        component: () => import('@/views/pages/Login.vue'),
       }
     ],
   },
@@ -115,27 +134,24 @@ const router = createRouter({
 
 })
 const getCurrentUser = () => {
-  return new Promise((resolve, reject) => {
-    const removeListener = onAuthStateChanged(
-      getAuth(),
-      (user) => {
-        removeListener()
-      },
-      reject
-    )
-  })
+  var user = sessionStorage.getItem('USER');
+  if (user) {
+    console.log(user);
+    return true
+  }
+  return false
 }
-// router.beforeEach(async (to,from, next)=>{
-//   if(to.matched.some((record) => record.meta.requiresAuth)){
-//     if(await getCurrentUser()){
-//       next()
-//     }else{
-//       alert("You dont have access permission")
-//       next('/login')
-//     }
-//   }else{
-//     next()
-//   }
-// })
+router.beforeEach(async (to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (getCurrentUser()) {
+      next()
+    } else {
+      alert("You dont have access permission")
+      next('/login')
+    }
+  } else {
+    next()
+  }
+})
 
 export default router

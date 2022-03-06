@@ -34,15 +34,15 @@ const account = {
             context.commit('setAccounts', response.data)
             return response
         },
-        async loginAction(context, user) {
-            let dto = {
-                email: user.email,
-                password: user.password
-            }
-            const response = await axios.post('/api/accounts/login', dto)
-            console.log(response);
-            return response
-        },
+        // async loginAction(context, user) {
+        //     let dto = {
+        //         email: user.email,
+        //         password: user.password
+        //     }
+        //     const response = await axios.post('/api/accounts/login', dto)
+        //     console.log(response);
+        //     return response
+        // },
         async searchListAccounts(context, search){
             const response = await http.get('/api/accounts/search',{
                 params:{
