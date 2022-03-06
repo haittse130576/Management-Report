@@ -78,8 +78,7 @@ const routes = [
     name: 'Home',
     component: UserLayout,
     meta: {
-      requiresAuth: true,
-      authorize: [Role.Teacher, Role.Student]
+      requiresAuth: true
     },
     redirect: '/user/home',
     children: [
