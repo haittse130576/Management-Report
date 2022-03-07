@@ -174,6 +174,32 @@ export default {
       this.$refs[formName].resetFields()
     },
     onSubmit() {},
+    handleDelete(index, row){
+      var id = row.id
+      console.log(id);
+      this.$confirm(
+          'This will permanently update the project. Continue?',
+          'Warning',
+          {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning',
+          }
+        )
+          .then(() => {
+            this.store.dispatch('project/inactive', id)
+            this.$message({
+              type: 'success',
+              message: 'Update completed',
+            })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: 'Update canceled',
+            })
+          })
+    }
   },
   mounted() {
     this.init()

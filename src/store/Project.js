@@ -28,7 +28,7 @@ const project = {
             return res.data
         },
         async inactive(context, id){
-            const res = await http.put(`api/projects/update/${project.id}`)
+            const res = await http.put(`api/projects/inactive/${id}`,{})
             return res.data
         }
     }
