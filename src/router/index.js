@@ -138,39 +138,51 @@ const router = createRouter({
   },
 
 })
-const getCurrentUser = () => {
-  var user = sessionStorage.getItem('USER');
-  if (user) {
-    return JSON.parse(user)
-  }
-  return null
-}
+
 router.beforeEach(async (to, from, next) => {
   const { authorize } = to.meta
-  const currentUser = getCurrentUser()
-  if(currentUser.roleName === Role.Staff || currentUser.roleName === Role.Admin){
-    currentUser.roleName = Role.Admin
-  }
-
-  if (authorize) {
-    if (!currentUser) {
-      alert("You dont have access permission")
-      return next({
-        path: '/login',
-        query: { returnUrl: to.path }
-      })
-    }
-    else {
-      if (authorize.length && !authorize.includes(currentUser.roleName)) {
+  const currentUser = localStorage.getItem('USER');
+  const user = JSON.parse(currentUser)
+  if(to.matched.some((record) => record.meta.requiresAuth)){
+    if(currentUser === null){
+      next('/login')
+    }else{
+      
+      if(authorize.length && !authorize.includes(user.account.roleName)){
         alert("You dont have access permission")
         return next({
-          path: '/login',
-          query: { returnUrl: to.path }
+          path: '/login'
         })
+      }else{
+        next()
       }
+      
     }
   }
   next()
+  // if(currentUser.roleName === Role.Staff || currentUser.roleName === Role.Admin){
+  //   currentUser.roleName = Role.Admin
+  // }
+
+  // if (authorize) {
+  //   if (!currentUser) {
+  //     alert("You dont have access permission")
+  //     return next({
+  //       path: '/login',
+  //       query: { returnUrl: to.path }
+  //     })
+  //   }
+  //   else {
+  //     if (authorize.length && !authorize.includes(currentUser.roleName)) {
+  //       alert("You dont have access permission")
+  //       return next({
+  //         path: '/login',
+  //         query: { returnUrl: to.path }
+  //       })
+  //     }
+  //   }
+  // }
+  // next()
 })
 
 export default router

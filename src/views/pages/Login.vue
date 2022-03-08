@@ -39,31 +39,25 @@ export default {
         const email = result.user.email
         if (!email.toLowerCase().includes('@fpt.edu.vn')) {
           alert('Use FPT email to login again')
-          router.push('/login')
         } else {
-          const res = await store.dispatch('auth/login', { email: email })
-          var test = JSON.parse(sessionStorage.getItem("USER"))
-          console.log('sesssss');
-          console.log(test);
-          // router.push('/')
-          if (res.status === 'success') {
-            var roleId = res.data.roleId
-            switch (roleId) {
-              case 1:
-                router.push('/admin/dashboard')
-                break
-              case 2:
-                router.push('/admin/dashboard')
-                break
-              case 3:
-                router.push('/user/home')
-                break
-              case 4:
-                router.push('/user/home')
-                break
-              default:
-                router.push('/login')
-            }
+          await store.dispatch('auth/login', { email: email })
+          let user = JSON.parse(localStorage.getItem('USER'))
+          let roleName = user.account.roleName
+          switch (roleName) {
+            case 'Admin':
+              router.push('/admin/dashboard')
+              break
+            case 'Staff':
+              router.push('/admin/dashboard')
+              break
+            case 'Teacher':
+              router.push('/user/Home')
+              break
+            case 'Student':
+              router.push('/user/Home')
+              break
+            default:
+              router.push('/login')
           }
         }
       })

@@ -1,4 +1,3 @@
-
 import http from '../http-common'
 const auth = {
     namespaced: true,
@@ -17,15 +16,15 @@ const auth = {
     },
     actions: {
         async login(context, account) {
-            const response = await http.post('/api/accounts/login', account)
+            const response = await http.post('/api/auth/login', account)
             if (response.data.status == 'success') {
                 var user = response.data.data
-                context.commit('setAccount', user)
-                sessionStorage.setItem('USER', JSON.stringify(user))   
-                return response.data;           
-            } else {
-                context.commit('setAccount', {})
+                localStorage.setItem('USER', JSON.stringify(user))
             }
+        },
+        logout(context) {
+            localStorage.removeItem('USER')
+            useRouter().push('/login')
         }
     }
 }
