@@ -21,6 +21,11 @@ export default [
         component: 'CNavItem',
         name: 'Groups',
         to: '/admin/groups'
+      },
+      {
+        component: 'CNavItem',
+        name: 'Profile',
+        to: '/user/profile'
       }
     ],
   }
