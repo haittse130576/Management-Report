@@ -28,5 +28,18 @@ export default [
         to: '/user/profile'
       }
     ],
+  },
+  {
+    component: 'CNavGroup',
+    name: 'Projects',
+    to: '/projects',
+    icon: 'cil-user',
+    items: [
+      {
+        component: 'CNavItem',
+        name: 'List Projects',
+        to: '/admin/list-projects'
+      }
+    ],
   }
 ]
