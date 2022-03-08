@@ -160,29 +160,6 @@ router.beforeEach(async (to, from, next) => {
     }
   }
   next()
-  // if(currentUser.roleName === Role.Staff || currentUser.roleName === Role.Admin){
-  //   currentUser.roleName = Role.Admin
-  // }
-
-  // if (authorize) {
-  //   if (!currentUser) {
-  //     alert("You dont have access permission")
-  //     return next({
-  //       path: '/login',
-  //       query: { returnUrl: to.path }
-  //     })
-  //   }
-  //   else {
-  //     if (authorize.length && !authorize.includes(currentUser.roleName)) {
-  //       alert("You dont have access permission")
-  //       return next({
-  //         path: '/login',
-  //         query: { returnUrl: to.path }
-  //       })
-  //     }
-  //   }
-  // }
-  // next()
 })
 
 export default router
