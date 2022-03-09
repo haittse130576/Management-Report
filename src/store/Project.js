@@ -1,15 +1,9 @@
 import http from '../http-common'
-
 const project = {
     namespaced : true,
     state:{
         projects:[],
-        project:{
-            id:'',
-            projectName:'',
-            description:'',
-            status:''
-        }
+        project:{}
     },
     getters:{
         getProject(state){
