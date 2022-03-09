@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 
 import Account from './Account'
 import Role from './Role'
+import Report from './Report'
 
 export default createStore({
   state: {
@@ -22,7 +23,8 @@ export default createStore({
   actions: {},
   modules: {
     Account,
-    Role
+    Role,
+    Report
   },
 })
 // const express = require('express')

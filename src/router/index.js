@@ -42,7 +42,12 @@ const routes = [
             path: 'admin/groups',
             name: 'Groups',
             component: () => import('@/views/admin/Groups'),
-          }
+          }, 
+          {
+            path: 'admin/manageReport',
+            name: 'ManageReport',
+            component: () => import('@/views/admin/ManageReport.vue'),
+          },
         ],
       },
 
@@ -76,7 +81,12 @@ const routes = [
         path: 'user/project',
         name: 'Project',
         component: () => import('@/views/user/Project.vue'),
-      }
+      },
+      {
+        path: 'user/report',
+        name: 'Report',
+        component: () => import('@/views/user/Report.vue'),
+      },
 
 
     ],
