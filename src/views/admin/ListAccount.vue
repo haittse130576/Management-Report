@@ -91,6 +91,7 @@
           :page-size="getAccountResult.pageSize"
           :total="getAccountResult.totalCount"
           :current-page="getAccountResult.pageIndex"
+          :page-count="getAccountResult.totalPages"
           @current-change="setPage"
         >
         </el-pagination>
@@ -171,13 +172,14 @@ export default {
       this.searchResult = await this.searchListAccounts(this.searchValue)
     },
     async setPage(val) {
+      console.log(val);
       this.searchValue = {
         fullname: this.form.fullname,
         email: this.form.email,
         roleId: this.form.role,
         status: this.form.status,
         pageNumber: val,
-        pageSize: getAccountResult.pageSize,
+        pageSize: this.getAccountResult.pageSize,
       }
       if (this.form.fullname.trim() === '') {
         this.searchValue.fullname = null
