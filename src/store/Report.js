@@ -32,9 +32,8 @@ const report = {
     actions:{
         async getReportsAction(context){
             let response = await http.get("/api/reports")
-            context.commit('setReports', response.data)
-            console.log(response)
-            return response
+            let data = response.data.data
+            context.commit('setReports', data)
         },
     }
 }

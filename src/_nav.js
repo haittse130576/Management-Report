@@ -22,16 +22,7 @@ export default [
         name: 'Groups',
         to: '/admin/groups'
       },
-      {
-        component: 'CNavItem',
-        name: 'Report',
-        to: '/user/report'
-      },
-      {
-        component: 'CNavItem',
-        name: 'Manage Reports',
-        to: '/admin/manageReport'
-      },
+      
 
     ],
   },
@@ -45,7 +36,12 @@ export default [
         component: 'CNavItem',
         name: 'List Projects',
         to: '/admin/list-projects'
-      }
+      },
+      {
+        component: 'CNavItem',
+        name: 'Manage Reports',
+        to: '/admin/reports'
+      },
     ],
   }
 ]

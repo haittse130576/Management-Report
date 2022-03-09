@@ -64,9 +64,9 @@ const routes = [
             component: () => import('@/views/admin/ListProjects.vue'),
           },
           {
-            path: '/admin/groups',
-            name: 'Groups',
-            component: () => import('@/views/admin/Groups.vue'),
+            path: '/admin/reports',
+            name: 'Manage Reports',
+            component: () => import('@/views/admin/ManageReport.vue'),
           },
         ],
       },
