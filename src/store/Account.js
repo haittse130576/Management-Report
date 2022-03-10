@@ -1,4 +1,5 @@
 import axios from "axios"
+import { updateProfile } from "firebase/auth"
 import http from '../http-common'
 const account = {
     state: {
@@ -64,7 +65,9 @@ const account = {
                 context.commit('setAccountDetail', response.data)
             }
             return response.data
+            
         }
+
     }
 
 }
