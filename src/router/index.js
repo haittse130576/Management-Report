@@ -105,7 +105,7 @@ const routes = [
         path: 'user/profile',
         name: 'Profile',
         component: () => import('@/views/user/Profile.vue'),
-      }
+      },
 
 
     ],

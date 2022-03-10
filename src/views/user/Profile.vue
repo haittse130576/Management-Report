@@ -31,7 +31,6 @@
                     <CIcon icon="cil-calendar" />
                   </CInputGroupText>
                   <el-date-picker
-                    :lg="7"
                     placeholder="Date of Birth"
                     v-model="account.birthday"
                     autocomplete="dateofbirth"
@@ -94,12 +93,12 @@
 <script>
 import axios from 'axios'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { CInputGroup } from '@coreui/vue'
 export default {
   name: 'Profile',
   data() {
     return {
       account: {},
+      currentAccount: {},
     }
   },
   computed: {
@@ -109,8 +108,8 @@ export default {
     ...mapActions(['getAccountByEmail']),
     async profile() {
       var test = 'manhlvdse130605@fpt.edu.vn'
-      await this.getAccountByEmail(test)
-      this.account = this.getAccountDetail.data
+      this.currentAccount = JSON.parse(localStorage.getItem('USER'))
+      this.account = this.currentAccount
       console.log(this.account)
     },
     async updateButon() {
