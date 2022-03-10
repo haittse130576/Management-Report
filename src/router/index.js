@@ -73,6 +73,11 @@ const routes = [
             name: 'Profile',
             component: () => import('@/views/user/Profile.vue'),
           },
+          {
+            path: '/admin/scores',
+            name: 'Scores',
+            component: () => import('@/views/admin/ScoreReport.vue'),
+          },
         ],
       },
 

@@ -24,8 +24,8 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Profile',
-        to: '/user/profile'
+        name: 'Score',
+        to: '/admin/scores'
       }
     ],
   },
