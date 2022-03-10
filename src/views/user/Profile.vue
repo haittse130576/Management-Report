@@ -12,7 +12,7 @@
                   <CInputGroupText>@</CInputGroupText>
                   <CFormInput
                     placeholder="Email"
-                    v-model="account.email"
+                    v-model="currentAccount.email"
                     @keydown.prevent
                   />
                 </CInputGroup>
@@ -22,7 +22,7 @@
                   </CInputGroupText>
                   <CFormInput
                     placeholder="FullName"
-                    v-model="account.fullname"
+                    v-model="currentAccount.fullname"
                     autocomplete="fullname"
                   />
                 </CInputGroup>
@@ -32,7 +32,7 @@
                   </CInputGroupText>
                   <el-date-picker
                     placeholder="Date of Birth"
-                    v-model="account.birthday"
+                    v-model="currentAccount.birthday"
                     autocomplete="dateofbirth"
                   ></el-date-picker>
                 </CInputGroup>
@@ -42,7 +42,7 @@
                   </CInputGroupText>
                   <CFormInput
                     placeholder="Address"
-                    v-model="account.address"
+                    v-model="currentAccount.address"
                     autocomplete="address"
                   />
                 </CInputGroup>
@@ -52,7 +52,7 @@
                   </CInputGroupText>
                   <CFormInput
                     placeholder="Phone Number"
-                    v-model="account.phone"
+                    v-model="currentAccount.phone"
                     autocomplete="phonenumber"
                   />
                 </CInputGroup>
@@ -62,7 +62,7 @@
                   </CInputGroupText>
                   <CFormInput
                     placeholder="Student Code"
-                    v-model="account.accountCode"
+                    v-model="currentAccount.accountCode"
                     @keydown.prevent
                   />
                 </CInputGroup>
@@ -93,27 +93,28 @@
 <script>
 import axios from 'axios'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { inputProps } from 'element-plus'
+import { CForm } from '@coreui/vue'
 export default {
   name: 'Profile',
   data() {
     return {
-      account: {},
       currentAccount: {},
     }
   },
   computed: {
-    ...mapGetters(['getAccountDetail']),
   },
   methods: {
-    ...mapActions(['getAccountByEmail']),
+    ...mapActions(['updateProfileAction']),
     async profile() {
       var test = 'manhlvdse130605@fpt.edu.vn'
-      this.currentAccount = JSON.parse(localStorage.getItem('USER'))
-      this.account = this.currentAccount
-      console.log(this.account)
+      let temp = JSON.parse(localStorage.getItem('USER'))
+      this.currentAccount = temp.account
+      console.log(this.currentAccount)
     },
     async updateButon() {
-      let result = await this.updateProfileAction(this.account)
+      
+      let result = await this.updateProfileAction(this.currentAccount)
       console.log(result.data)
     },
   },

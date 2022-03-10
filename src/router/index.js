@@ -68,6 +68,11 @@ const routes = [
             name: 'Groups',
             component: () => import('@/views/admin/Groups.vue'),
           },
+          {
+            path: '/user/profile',
+            name: 'Profile',
+            component: () => import('@/views/user/Profile.vue'),
+          },
         ],
       },
 
@@ -101,11 +106,7 @@ const routes = [
         name: 'Project',
         component: () => import('@/views/user/Project.vue'),
       },
-      {
-        path: '/user/profile',
-        name: 'Profile',
-        component: () => import('@/views/user/Profile.vue'),
-      },
+
 
 
     ],
