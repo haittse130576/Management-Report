@@ -46,6 +46,11 @@ const routes = [
             name: 'Groups',
             component: () => import('@/views/admin/Groups.vue'),
           },
+          {
+            path: '/admin/groups/detail',
+            name: 'Group Detail',
+            component: () => import('@/views/admin/GroupDetail.vue'),
+          },
         ],
       },
       {
