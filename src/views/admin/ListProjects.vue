@@ -117,22 +117,32 @@
       </span>
     </template>
   </el-dialog>
+
+  <edit-project
+  :dialogVisible="dialogVisibleEditProject"
+  :project="project"
+  @close="handleEditProjectClose"/>
 </template>
 <script>
 import { useStore } from 'vuex'
+import EditProject from './EditProject.vue'
 export default {
+  components: { EditProject },
   computed:{
     
   },
   data() {
     return {
+      project: {},
       dialogVisible: false,
+      dialogVisibleEditProject:false,
       store: useStore(),
       projects: [],
       projectForm: {
         projectName: '',
         description: '',
         status:''
+        
       },
       rules: {
         projectName: [
@@ -172,6 +182,16 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    async handleEdit(index, row){
+      let projectId = row.id
+      console.log(`test: ${projectId}`);     
+      this.project = await this.store.dispatch('project/getProjectById', projectId)
+      this.dialogVisibleEditProject=true
+
+    },
+    handleEditProjectClose(){
+      this.dialogVisibleEditProject=false
     },
     onSubmit() {},
     handleDelete(index, row){
