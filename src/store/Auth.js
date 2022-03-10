@@ -24,7 +24,6 @@ const auth = {
         },
         logout(context) {
             localStorage.removeItem('USER')
-            useRouter().push('/login')
         }
     }
 }

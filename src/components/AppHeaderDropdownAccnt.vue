@@ -8,19 +8,27 @@
         Account
       </CDropdownHeader>
       <CDropdownItem> <CIcon icon="cil-user" /> Profile </CDropdownItem>
-      <CDropdownItem> <CIcon icon="cil-lock-locked" /> Logout </CDropdownItem>
+      <CDropdownItem @click="logout"> <CIcon icon="cil-lock-locked" /> Logout </CDropdownItem>
     </CDropdownMenu>
   </CDropdown>
 </template>
 
 <script>
 import avatar from '@/assets/images/avatars/8.jpg'
+import {useStore} from 'vuex'
 export default {
   name: 'AppHeaderDropdownAccnt',
-  setup() {
-    return {
+  data(){
+    return{
+      store: useStore(),
       avatar: avatar,
       itemsCount: 42,
+    }
+  },
+  methods:{
+    logout(){
+      this.store.dispatch('auth/logout')
+      this.$router.push('/login')
     }
   },
 }
