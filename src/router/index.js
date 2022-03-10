@@ -78,6 +78,11 @@ const routes = [
             name: 'Scores',
             component: () => import('@/views/admin/ScoreReport.vue'),
           },
+          {
+            path: '/admin/teacher-home',
+            name: 'Teacher Home',
+            component: () => import('@/views/admin/TeacherHome.vue'),
+          },
         ],
       },
 

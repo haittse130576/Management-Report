@@ -5,6 +5,7 @@ import Role from './Role'
 import auth from './Auth'
 import project from './Project'
 import mark from './Mark'
+import group from './Group'
 
 // const auth = {
 //   namespaced: true,
@@ -58,7 +59,8 @@ export default createStore({
     Role,
     auth,
     project,
-    mark
+    mark, 
+    group
   },
 })
 

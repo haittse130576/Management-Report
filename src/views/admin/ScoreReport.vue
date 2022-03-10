@@ -84,6 +84,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { Edit } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 export default {
   name: 'Scores',
   components: {},
@@ -93,12 +94,18 @@ export default {
       students: [],
     }
   },
-  computed: {},
+  computed: {
+  },
+  props: true,
   methods: {
     ...mapActions(['getMarksByGroup']),
     async init() {
-      const groupId = 1
-      this.students = await this.getMarksByGroup(groupId)
+        const router = useRouter()
+      console.log("ID is:"+this.$route.params.obj)
+      var tote = this.$route.params.obj
+      if(tote!=null){
+      this.students = await this.getMarksByGroup(tote)
+      }
       console.log(this.students)
     },
     // async onSubmit() {

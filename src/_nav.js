@@ -26,6 +26,11 @@ export default [
         component: 'CNavItem',
         name: 'Score',
         to: '/admin/scores'
+      },
+      {
+        component: 'CNavItem',
+        name: 'Teacher Home',
+        to: '/admin/teacher-home'
       }
     ],
   },
