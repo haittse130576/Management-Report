@@ -2,14 +2,13 @@ export default [
   {
     component: 'CNavItem',
     name: 'Dashboard',
-    to: '/dashboard',
+    to: '/admin/dashboard',
     icon: 'cil-speedometer',
     
   },
   {
     component: 'CNavGroup',
     name: 'Accounts',
-    to: '/accounts',
     icon: 'cil-user',
     items: [
       {

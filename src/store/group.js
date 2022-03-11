@@ -16,6 +16,9 @@ const group = {
         getGroup(state) {
             console.log('getter: ' + state.group.id);
             return state.group
+        },
+        getGroups(state){
+            return state.groups
         }
     },
     mutations: {
@@ -24,6 +27,7 @@ const group = {
         },
         setGroups(state, val) {
             state.groups = val
+            console.log( state.groups);
         }
     },
     actions: {
@@ -33,12 +37,12 @@ const group = {
             commit('setGroup', data)
         },
         async searchGroup({ commit }, param) {
-            const res = await http.get('api/groups/search', {
-                Semester: param.semester,
-                GroupCode: param.groupCode,
-                PageSize: param.pageSize,
-                PageNumber: param.pageNumber
-            })
+            const res = await http.get('api/groups/search', {params: {
+                semester: param.semester,
+                groupCode: param.groupCode,
+                pageSize: param.pageSize,
+                pageNumber: param.pageNumber
+            }})
             if (res.status === 200) {
                 commit('setGroups', res.data.data.items)
                 return res.data.data
