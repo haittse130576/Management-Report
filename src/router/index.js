@@ -69,7 +69,26 @@ const routes = [
             name: 'List Projects',
             component: () => import('@/views/admin/ListProjects.vue'),
           },
-         
+          {
+            path: '/admin/groups',
+            name: 'Groups',
+            component: () => import('@/views/admin/Groups.vue'),
+          },
+          {
+            path: '/user/profile',
+            name: 'Profile',
+            component: () => import('@/views/user/Profile.vue'),
+          },
+          {
+            path: '/admin/scores',
+            name: 'Scores',
+            component: () => import('@/views/admin/ScoreReport.vue'),
+          },
+          {
+            path: '/admin/teacher-home',
+            name: 'Teacher Home',
+            component: () => import('@/views/admin/TeacherHome.vue'),
+          },
         ],
       },
 
@@ -103,7 +122,8 @@ const routes = [
         path: '/user/project',
         name: 'Project',
         component: () => import('@/views/user/Project.vue'),
-      }
+      },
+
 
 
     ],
