@@ -1,7 +1,6 @@
-import axios from "axios"
-import { updateProfile } from "firebase/auth"
 import http from '../http-common'
 const account = {
+    namespaced: true,
     state: {
         accounts: [],
         accountResult:{},
@@ -55,19 +54,28 @@ const account = {
                     pageSize: search.pageSize
                 }
             })
-            context.commit('setAccountResult', response.data.data)
-            console.log(response);
+            if(response && response.data){
+                context.commit('setAccounts', response.data.data.items)
+                context.commit('setAccountResult', response.data.data)
+            }
+            
             return response
         },
         async getAccountByEmail(context, email){
-            const response = await http.get(`/api/accounts/detail/${email}`)
+            const response = await http.get(`/api/accounts/detail`,{params:{email: email}})
             if(response.data.status === 'success'){
                 context.commit('setAccountDetail', response.data)
             }
             return response.data
             
+        },
+        async getAccountByGroup({commit}, groupCode){
+            const res = await http.get(`api/accounts/get-by-group/${groupCode}`)
+            if(res && res.data){
+                commit('setAccounts',res.data.data)
+                return res.data
+            }
         }
-
     }
 
 }
