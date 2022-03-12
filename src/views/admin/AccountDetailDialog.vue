@@ -55,10 +55,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getAccountDetail']),
+    ...mapGetters('account',['getAccountDetail']),
   },
   mounted() {
-    console.log('AccountDetailDialog' + this.dialogVisible)
   },
   methods: {
     handleClose() {

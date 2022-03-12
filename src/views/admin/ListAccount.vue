@@ -88,10 +88,10 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :page-size="getAccountResult.pageSize"
-          :total="getAccountResult.totalCount"
-          :current-page="getAccountResult.pageIndex"
-          :page-count="getAccountResult.totalPages"
+          :page-size="accountPaging.pageSize"
+          :total="accountPaging.totalCount"
+          :current-page="accountPaging.pageIndex"
+          :page-count="accountPaging.totalPages"
           @current-change="setPage"
         >
         </el-pagination>
@@ -104,7 +104,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, useStore, mapState } from 'vuex'
 import { Search, Edit, Delete } from '@element-plus/icons-vue'
 import AccountDetailDialog from './AccountDetailDialog.vue'
 export default {
@@ -114,6 +114,7 @@ export default {
   },
   data() {
     return {
+      store: useStore(),
       form: {
         fullname: '',
         email: '',
@@ -127,15 +128,14 @@ export default {
       searchResult: {},
       searchValue: {},
       dialogVisible: false,
+      loading: true
     }
   },
   computed: {
-    ...mapGetters(['getAccounts', 'getListRoles', 'getAccountResult']),
-    account: {
-      get() {
-        return this.getAccountResult.items
-      },
-    },
+    ...mapState('account',{
+      account:(state) => state.accounts,
+      accountPaging:(state) => state.accountResult
+    })
   },
   methods: {
     ...mapActions([
@@ -145,8 +145,10 @@ export default {
       'getAccountByEmail',
     ]),
     async init() {
-      this.roles = await this.getListRolesAction()
-      this.searchResult = await this.searchListAccounts(this.searchValue)
+      this.loading = true
+      this.roles = await this.store.dispatch('getListRolesAction')
+      this.searchResult = await this.store.dispatch('account/searchListAccounts',this.searchValue)
+      this.loading = false
     },
     async onSubmit() {
       this.searchValue = {
@@ -169,7 +171,7 @@ export default {
       if (this.form.status.trim() === 'All') {
         this.searchValue.status = null
       }
-      this.searchResult = await this.searchListAccounts(this.searchValue)
+      await this.init()
     },
     async setPage(val) {
       console.log(val);
@@ -179,7 +181,7 @@ export default {
         roleId: this.form.role,
         status: this.form.status,
         pageNumber: val,
-        pageSize: this.getAccountResult.pageSize,
+        pageSize: this.accountPaging.pageSize,
       }
       if (this.form.fullname.trim() === '') {
         this.searchValue.fullname = null
@@ -193,10 +195,10 @@ export default {
       if (this.form.status.trim() === 'All') {
         this.searchValue.status = null
       }
-      this.searchResult = await this.searchListAccounts(this.searchValue)
+      await this.init()
     },
     async onEdit(index, email) {
-      await this.getAccountByEmail(email)
+      await this.store.dispatch('account/getAccountByEmail', email)
       this.dialogVisible = true
     },
     handleAccountDetailDialogClose() {

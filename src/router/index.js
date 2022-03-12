@@ -1,10 +1,11 @@
-import { h, resolveComponent } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { Role } from '../config/role'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { h, resolveComponent } from 'vue'
 
 import DefaultLayout from '@/layouts/DefaultLayout'
+import { Role } from '../config/role'
 import UserLayout from '@/layouts/UserLayout'
+
 const routes = [
   {
     path: '/',
@@ -13,7 +14,7 @@ const routes = [
 
     meta: {
       requiresAuth: true,
-      authorize: [Role.Admin]
+      authorize: [Role.Admin, Role.Staff]
     },
     redirect: '/admin/dashboard',
     children: [
@@ -46,6 +47,11 @@ const routes = [
             name: 'Groups',
             component: () => import('@/views/admin/Groups.vue'),
           },
+          {
+            path: '/admin/groups/detail',
+            name: 'Group Detail',
+            component: () => import('@/views/admin/GroupDetail.vue'),
+          },
         ],
       },
       {
@@ -62,11 +68,6 @@ const routes = [
             path: '/admin/list-projects',
             name: 'List Projects',
             component: () => import('@/views/admin/ListProjects.vue'),
-          },
-          {
-            path: '/admin/groups',
-            name: 'Groups',
-            component: () => import('@/views/admin/Groups.vue'),
           },
           {
             path: '/user/profile',
@@ -94,7 +95,7 @@ const routes = [
     component: UserLayout,
     meta: {
       requiresAuth: true,
-      authorize: [Role.Teacher, Role.Student, Role.Admin]
+      authorize:[Role.Student, Role.Teacher]
     },
     redirect: '/user/home',
     children: [
@@ -156,27 +157,27 @@ const router = createRouter({
 
 })
 
-router.beforeEach(async (to, from, next) => {
-  const { authorize } = to.meta
-  const currentUser = localStorage.getItem('USER');
-  const user = JSON.parse(currentUser)
-  if(to.matched.some((record) => record.meta.requiresAuth)){
-    if(currentUser === null){
-      next('/login')
-    }else{
+// router.beforeEach(async (to, from, next) => {
+//   const { authorize } = to.meta
+//   const currentUser = localStorage.getItem('USER');
+//   const user = JSON.parse(currentUser)
+//   if(to.matched.some((record) => record.meta.requiresAuth)){
+//     if(currentUser === null){
+//       next('/login')
+//     }else{
       
-      if(authorize.length && !authorize.includes(user.account.roleName)){
-        alert("You dont have access permission")
-        return next({
-          path: '/login'
-        })
-      }else{
-        next()
-      }
+//       if(authorize.length && !authorize.includes(user.account.roleName)){
+//         alert("You dont have access permission")
+//         return next({
+//           path: '/login'
+//         })
+//       }else{
+//         next()
+//       }
       
-    }
-  }
-  next()
-})
+//     }
+//   }
+//   next()
+// })
 
 export default router
