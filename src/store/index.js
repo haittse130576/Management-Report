@@ -1,11 +1,11 @@
-import {createLogger, createStore } from 'vuex'
+import {createLogger, createStore} from 'vuex'
 
 import Account from './Account'
 import Role from './Role'
 import auth from './Auth'
-import project from './Project'
-import mark from './Mark'
 import group from './group'
+import mark from './Mark'
+import project from './Project'
 
 // const auth = {
 //   namespaced: true,
@@ -58,14 +58,9 @@ export default createStore({
     Account,
     Role,
     auth,
-<<<<<<<
-    project,
-    group
-=======
     project,
     mark, 
     group
->>>>>>>
   },
 })
 

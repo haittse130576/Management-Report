@@ -1,4 +1,4 @@
-import axios from "axios"
+import http from '../http-common'
 const groups = {
     state: {
         groups: [],
@@ -29,7 +29,7 @@ const groups = {
     },
     actions: {
         async getGroupsAction(context) {
-            const response = await axios.get('/api/groups')
+            const response = await http.get('/api/groups')
             if (response.data != null) {
                 context.commit('setGroups', response.data)
             }
@@ -40,7 +40,7 @@ const groups = {
         async getGroupByIdAction(context,id) {
             try{
             if(id){
-                    const response = await axios.get('/api/groups/'+id)
+                    const response = await http.get('/api/groups/'+id)
                     if (response.status===200) {
                         context.commit('setGroup', response.data)
                     }
@@ -53,7 +53,7 @@ const groups = {
         async getGroupByAccountAction(context,email){
             try{
                 if(email){
-                    const response = await axios.get('/api/groups/get-by-account?email='+email)
+                    const response = await http.get('/api/groups/get-by-account?email='+email)
                     if(response.status ===200){
                         context.commit('setGroups', response.data)
                     }
@@ -66,7 +66,7 @@ const groups = {
         async getAccountByGroupIdAction(context,groupId){
             try{
                 if(groupId){
-                    const response = await axios.get('/api/account-group/find-by-group-id?groupId='+groupId)
+                    const response = await http.get('/api/account-group/find-by-group-id?groupId='+groupId)
                     if(response.status ===200){
                         context.commit('setListAccounts', response.data)
                     }
@@ -75,6 +75,26 @@ const groups = {
             }catch(error){
                 console.log(error)
             }
+        },
+        async search({ commit}, prams){
+            const res = await http.get(`api/groups/search`, { 
+                params:{
+                    GroupCode: prams.GroupCode,
+                    Semester: prams.Semester,
+                    Year: prams.Year
+                }
+            })
+            if(res && res.status === 200){
+                if(res.data.data){
+                    return res.data.data
+                }
+            }
+            return null
+        },
+        async insert(context, group){
+            const res = await http.post(`api/groups/insert`,
+            {}
+            )
         }
     }
 
