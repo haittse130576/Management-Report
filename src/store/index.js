@@ -3,7 +3,7 @@ import {createLogger, createStore} from 'vuex'
 import Account from './Account'
 import Role from './Role'
 import auth from './Auth'
-import group from './group'
+import group from './Group'
 import mark from './Mark'
 import project from './Project'
 

@@ -1,5 +1,6 @@
 import http from '../http-common'
 const groups = {
+    namespaced: true,
     state: {
         groups: [],
         group: {},
@@ -76,7 +77,7 @@ const groups = {
                 console.log(error)
             }
         },
-        async search({ commit}, prams){
+        async searchGroup({ commit}, prams){
             const res = await http.get(`api/groups/search`, { 
                 params:{
                     GroupCode: prams.GroupCode,
@@ -91,7 +92,7 @@ const groups = {
             }
             return null
         },
-        async insert(context, group){
+        async insertGroup(context, group){
             const res = await http.post(`api/groups/insert`,
             {}
             )

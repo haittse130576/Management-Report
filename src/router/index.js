@@ -70,11 +70,6 @@ const routes = [
             component: () => import('@/views/admin/ListProjects.vue'),
           },
           {
-            path: '/admin/groups',
-            name: 'Groups',
-            component: () => import('@/views/admin/Groups.vue'),
-          },
-          {
             path: '/user/profile',
             name: 'Profile',
             component: () => import('@/views/user/Profile.vue'),
