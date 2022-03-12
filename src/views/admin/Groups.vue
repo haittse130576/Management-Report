@@ -1,4 +1,8 @@
 <template>
+<div class="card bg-default">
+  <el-button type="primary" size="default" @click="onCreate">Add New</el-button>
+  
+</div>
   <div class="card bg-default">
     <el-form
       class="mt-3"
