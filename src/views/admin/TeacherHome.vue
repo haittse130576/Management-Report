@@ -97,7 +97,7 @@ export default {
       // this.projects = resultP.data
       var user = JSON.parse(localStorage.getItem("USER"))
         console.log(user.account.email)
-        var mail = "admin"
+        var mail = "hai"
        let result = await this.getGroupByAccountAction(mail);
        this.groups = result.data.data
       console.log(this.groups)

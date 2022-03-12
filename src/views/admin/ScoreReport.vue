@@ -8,14 +8,16 @@
           prop="fullname"
           label="Full Name"
           header-align="center"
-        />
+          
+        ></el-table-column>
         <el-table-column
           prop="report1"
           label="Report 1"
           header-align="center"
           align="center"
           contenteditable="true"
-        />
+        >
+        <el-input ></el-input></el-table-column>
         <el-table-column
           prop="report2"
           label="Report 2"
