@@ -1,9 +1,10 @@
 <template>
   <el-dialog
-    title=""
+    :title="title"
     v-model="dialogVisible"
-    width="50%"
     :before-close="handleClose"
+    width="50%"
+    @close="handleClose"
   >
     <span>
       <el-form
@@ -67,9 +68,11 @@ export default {
   },
   data() {
     return {
+      title: 'Create New Account',
       store: useStore(),
       ruleForm: {
         fullname: '',
+        password: '',
         email: '',
         accountCode: '',
         phone: '',
@@ -134,10 +137,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getAccountDetail']),
   },
   mounted() {
-    console.log('FormValidation' + this.dialogVisible)
   },
   methods: {
     handleClose() {
@@ -146,18 +147,18 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          var response = await this.store.dispatch(
-            'insertAccount',
-            this.ruleForm,
-          )
+          var response = await this.store.dispatch('account/insertAccount', this.ruleForm)
+          console.log(response);
           if (response.status === 'success') {
             this.$notify({
               title: 'Success',
               message: 'Insert successfully',
               type: 'success',
             })
-          }else{
-              this.$notify({
+              this.handleClose()
+              await this.store.dispatch('account/searchListAccounts')
+          } else {
+            this.$notify({
               title: 'Error',
               message: 'Insert failed',
               type: 'danger',
@@ -175,7 +176,7 @@ export default {
   },
   watch: {
     visbleSync(val) {
-      this.$emit('update:dialogVisible', val)
+      this.$emit('update:dialogVisibleAdd', val)
     },
   },
 }

@@ -1,5 +1,5 @@
 <template>
-  <el-button type="primary" @click="onAdd()" class="btnAdd">Add </el-button>
+  <el-button type="primary" @click="onAdd" class="btnAdd">Add </el-button>
   <div class="card bg-default">
     <el-form
       class="mt-3"
@@ -134,6 +134,7 @@ export default {
       searchResult: {},
       searchValue: {},
       dialogVisible: false,
+      dialogVisibleAdd: false,
       loading: true
     }
   },
@@ -209,6 +210,7 @@ export default {
     },
     onAdd() {
       this.dialogVisibleAdd = true
+      console.log('list account', this.dialogVisibleAdd);
     },
     handleAccountDetailDialogClose() {
       this.dialogVisible = false
