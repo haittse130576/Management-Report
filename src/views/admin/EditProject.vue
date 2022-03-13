@@ -17,14 +17,15 @@
         <el-form-item label="Project Name">
           <el-input v-model="project.projectName"></el-input>
         </el-form-item>
-        <el-form-item label="Description">
-          <el-input v-model="project.description"></el-input>
-        </el-form-item>
+        
         <el-form-item label="Status">
           <el-select v-model="project.status" placeholder="Status">
               <el-option label="Active" value="Active"></el-option>
               <el-option label="Inactive" value="Inactive"></el-option>
             </el-select>
+        </el-form-item>
+        <el-form-item label="Description">
+          <el-input type="textarea" v-model="project.description"></el-input>
         </el-form-item>
 
         <el-popconfirm
