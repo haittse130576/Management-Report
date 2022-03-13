@@ -4,67 +4,55 @@
       :title="title"
       v-model="dialogVisible"
       :before-close="handleClose"
-      width="40%"
+      width="50%"
       @close="handleClose"
     >
       <el-form
-        :model="dataTable"
-        ref="form"
-        label-width="100px"
-        :inline="false"
-        size="normal"
+        :model="ruleForm"
+        :rules="rules"
+        ref="ruleForm"
+        label-width="120px"
+        class="demo-ruleForm"
       >
-        <el-form-item label="Report Name">
-          <el-input v-model="dataTable.reportName"></el-input>
+        <el-form-item label="Title" prop="title">
+          <el-input v-model="ruleForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="Activity time">
-          <el-col :span="11">
-            <el-date-picker
-              v-model="form.date1"
-              type="date"
-              placeholder="Pick a date"
-              style="width: 100%"
-            ></el-date-picker>
-          </el-col>
-          <el-col :span="2" class="text-center">
-            <span class="text-gray-500">-</span>
-          </el-col>
-          <el-col :span="11">
-            <el-time-picker
-              v-model="form.dsate2"
-              placeholder="Pick a time"
-              style="width: 100%"
-            ></el-time-picker>
-          </el-col>
-        </el-form-item>
-
-        <el-form-item align="center" header-align="right">
-          <el-popconfirm
-            confirm-button-text="Yes"
-            cancel-button-text="No, thanks"
-            :icon="InfoFilled"
-            title="Are you sure to create this?"
-            @confirm="confirmEvent"
-            @cancel="cancelEvent"
+        <el-form-item label="Start Time" prop="startTime">
+          <el-date-picker
+            v-model="ruleForm.startTime"
+            type="datetime"
+            placeholder="Select date and time"
           >
-            <template #reference>
-              <el-button type="primary" @click="onSubmit">Create</el-button>
-            </template>
-          </el-popconfirm>
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="Set Time" prop="endTime">
+          <el-date-picker
+            v-model="ruleForm.endTime"
+            type="datetime"
+            placeholder="Select date and time"
+          >
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="Status" prop="status">
+          <el-select v-model="ruleForm.status" placeholder="Status">
+            <el-option label="Active" value="Active"></el-option>
+            <el-option label="Inactive" value="Inactive"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitForm('ruleForm')"
+            >Create</el-button
+          >
+          <el-button @click="resetForm('ruleForm')">Reset</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
   </div>
 </template>
 <script>
-import { reactive, ref } from 'vue'
-
+import { useStore } from 'vuex'
 export default {
-  
-
-  
-
-  name: 'CreateNewReportDialog',
+  name: 'AccountDetailDialog',
   props: {
     dialogVisible: {
       type: Boolean,
@@ -72,33 +60,79 @@ export default {
   },
   data() {
     return {
-      title: 'Create New Report Dialog',
-
-      dataTable: [
-        {
-          reportName: '',
-          timeSetup: '',
-        },
-      ],
-      form: [
-        {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: '',
-        },
-      ],
+      title: 'Account Detail Dialog',
+      store: useStore(),
+      ruleForm: {
+        title: '',
+        startTime: '',
+        endTime: '',
+        status: '',
+      },
+      rules: {
+        title: [
+          {
+            required: true,
+            message: 'Please input Activity name',
+            trigger: 'blur',
+          },
+          {
+            min: 3,
+            max: 5,
+            message: 'Length should be 3 to 5',
+            trigger: 'blur',
+          },
+        ],
+        startTime: [
+          {
+            type: 'date',
+            required: true,
+            message: 'Please pick a date',
+            trigger: 'change',
+          },
+        ],
+        endTime: [
+          {
+            type: 'date',
+            required: true,
+            message: 'Please pick a time',
+            trigger: 'change',
+          },
+        ],
+        status: [
+          {
+            required: true,
+            message: 'Please pick a status',
+            trigger: 'change',
+          },
+        ],
+      },
     }
   },
-
+  computed: {},
   mounted() {},
   methods: {
     handleClose() {
       this.$emit('close')
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          
+          var response = await this.store.dispatch('insert', this.ruleForm)
+          if (response.status === 'success') {
+            this.$message('Successfully!!!')
+            this.handleClose()
+            await this.store.dispatch('getReportsAction')
+            this.resetForm('ruleForm')
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     },
   },
   watch: {

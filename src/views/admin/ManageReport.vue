@@ -27,61 +27,66 @@
             :formatter="dateFormat"
           />
           <el-table-column
-            prop="status"
-            align="center"
-            label="Status"
-            header-align="center"
-          />
-          
-          <el-table-column align="center" label="Action" header-align="center">
-            <!-- <template>
-          <template #default="scope">
-            <el-button-group class="ml-4">
-              <el-button
-                type="primary"
-                :icon="Edit"
-                @click="onEdit(scope.$index, scope.row.reportId)"
-              ></el-button>
-              <el-button type="danger" :icon="Delete"></el-button>
-            </el-button-group>
-          </template> -->
-            <el-popconfirm
-              confirm-button-text="Yes"
-              cancel-button-text="No, thanks"
-              :icon="InfoFilled"
-              icon-color="red"
-              title="Are you sure to delete this?"
-              @confirm="confirmEvent"
-              @cancel="cancelEvent"
-            >
-              <template #reference>
-                <el-button type="danger">Delete</el-button>
-              </template>
-            </el-popconfirm>
-          </el-table-column>
+        prop="status"
+        label="Status"
+        header-align="center"
+        align="center"
+      >
+        <template #default="scope">
+          <el-tag
+            :type="scope.row.status === 'Active' ? 'success' : 'danger'"
+            >{{ scope.row.status }}</el-tag
+          >
+        </template>
+      </el-table-column>
+          <el-table-column label="Operations" header-align="center" align="center">
+        <template #default="scope">
+          <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+            >Edit</el-button
+          >
+          <el-button
+            size="small"
+            type="danger"
+            @click="handleDelete(scope.$index, scope.row)"
+            >Delete</el-button
+          >
+        </template>
+      </el-table-column>
+         
         </el-table>
       </div>
     </div>
+
+    
     <create-new-report
       :dialogVisible="dialogVisible"
       @close="handleAccountDetailDialogClose"
     />
+    <!-- <edit-report 
+    :dialogVisible="dialogVisible"
+     @close="handleEditReportClose"
+    /> -->
   </div>
 </template>
 <script >
 import CreateNewReport from './CreateNewReport.vue'
 import { ref } from 'vue'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions,useStore } from 'vuex'
 import moment from "moment";
+import EditReport from './EditReport.vue'
 
 export default {
   name: 'ManageReport',
   components: {
     CreateNewReport,
+    EditReport,
+    
   },
   data() {
     return {
       dialogVisible: false,
+      report:[],
+      store: useStore(),
       form: {
         fullname: '',
         email: '',
@@ -98,18 +103,57 @@ export default {
     },
   },
   methods: {
+
+    handleEdit(){
+       this.dialogVisible = true
+    },
     onEdit() {
       this.dialogVisible = true
     },
     handleAccountDetailDialogClose() {
       this.dialogVisible = false
     },
+    handleEditReportClose(){
+      this.dialogVisible = false
+    },
     ...mapActions([
       'getReportsAction',
-     
     ]),
+    handleDelete(index, row){
+      var id = row.id
+      console.log(id);
+      this.$confirm(
+          'This will permanently update the report. Continue?',
+          'Warning',
+          {
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Cancel',
+            type: 'warning',
+          }
+        )
+          .then(() => {
+            this.store.dispatch('delete', id)
+            this.$message({
+              type: 'success',
+              message: 'Update completed',
+            })
+          })
+          .catch(() => {
+            this.$message({
+              type: 'info',
+              message: 'Update canceled',
+            })
+          })
+    },
+    async handleEdit(index, row){
+      let reportId = row.id
+      console.log(`test: ${reportId}`);     
+      this.report = await this.store.dispatch('update', reportId)
+      this.dialogVisibleEditReport=true
+    },
+
     async init(){
-      await this.getReportsAction()
+      await this.store.dispatch('getReportsAction')
     },
     dateFormat(row, column) {
       var date = row[column.property];
