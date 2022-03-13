@@ -1,4 +1,5 @@
 <template>
+  <el-button type="primary" @click="onAdd" class="btnAdd">Add </el-button>
   <div class="card bg-default">
     <el-form
       class="mt-3"
@@ -69,7 +70,6 @@
           align="center"
           prop="status"
         >
-          
         </el-table-column>
         <el-table-column align="center" label="Action" header-align="center">
           <template #default="scope">
@@ -101,16 +101,22 @@
       :dialogVisible="dialogVisible"
       @close="handleAccountDetailDialogClose"
     />
+    <form-validation
+      :dialogVisible="dialogVisibleAdd"
+      @close="handleAccountDetailDialogAddClose"
+    />
   </div>
 </template>
 <script>
 import { mapGetters, mapActions, useStore, mapState } from 'vuex'
 import { Search, Edit, Delete } from '@element-plus/icons-vue'
 import AccountDetailDialog from './AccountDetailDialog.vue'
+import FormValidation from './FormValidation.vue'
 export default {
   name: 'Groups',
   components: {
     AccountDetailDialog,
+    FormValidation,
   },
   data() {
     return {
@@ -128,6 +134,7 @@ export default {
       searchResult: {},
       searchValue: {},
       dialogVisible: false,
+      dialogVisibleAdd: false,
       loading: true
     }
   },
@@ -201,10 +208,18 @@ export default {
       await this.store.dispatch('account/getAccountByEmail', email)
       this.dialogVisible = true
     },
+    onAdd() {
+      this.dialogVisibleAdd = true
+      console.log('list account', this.dialogVisibleAdd);
+    },
     handleAccountDetailDialogClose() {
       this.dialogVisible = false
     },
+    handleAccountDetailDialogAddClose() {
+      this.dialogVisibleAdd = false
+    },
   },
+
   mounted() {
     this.init()
   },
