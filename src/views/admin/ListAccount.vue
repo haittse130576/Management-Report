@@ -37,7 +37,7 @@
   </div>
   <div class="mt-2 card bg-default">
     <div class="table-responsive">
-      <el-table ref="tableRef" :data="account" style="width: 100%" stripe>
+      <el-table ref="tableRef" :data="account" style="width: 100%" stripe v-loading="loading">
         <el-table-column
           type="index"
           label="No."
@@ -145,12 +145,6 @@ export default {
     })
   },
   methods: {
-    ...mapActions([
-      'getAccountsAction',
-      'getListRolesAction',
-      'searchListAccounts',
-      'getAccountByEmail',
-    ]),
     async init() {
       this.loading = true
       this.roles = await this.store.dispatch('getListRolesAction')
@@ -210,7 +204,6 @@ export default {
     },
     onAdd() {
       this.dialogVisibleAdd = true
-      console.log('list account', this.dialogVisibleAdd);
     },
     handleAccountDetailDialogClose() {
       this.dialogVisible = false
