@@ -2,14 +2,13 @@ export default [
   {
     component: 'CNavItem',
     name: 'Dashboard',
-    to: '/dashboard',
+    to: '/admin/dashboard',
     icon: 'cil-speedometer',
     
   },
   {
     component: 'CNavGroup',
     name: 'Accounts',
-    to: '/accounts',
     icon: 'cil-user',
     items: [
       {
@@ -21,6 +20,16 @@ export default [
         component: 'CNavItem',
         name: 'Groups',
         to: '/admin/groups'
+      },
+      {
+        component: 'CNavItem',
+        name: 'Score',
+        to: '/admin/scores'
+      },
+      {
+        component: 'CNavItem',
+        name: 'Teacher Home',
+        to: '/admin/teacher-home'
       }
     ],
   },
