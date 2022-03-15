@@ -1,8 +1,10 @@
 import http from '../http-common'
 
 const report = {
+    namespaced : true,
     state: {
         reports: [],
+        report:{},
         listReports: {},
         reportResult: {}
     },
@@ -10,24 +12,24 @@ const report = {
         getReports(state) {
             return state.reports
         },
-        getListReports(state) {
-            return state.listReports
-        },
         getReportResults(state) {
             return state.reportResult
+        },
+        getReport(state){
+            return state.report
         }
     },
     mutations: {
         setReports(state, val) {
             state.reports = val
         },
-        setListReports(state, val) {
-            state.listReports = val
-        },
         setReportResults(state, res) {
             state.reportResult = res
+        },
+        setReport(state, val) {
+            state.report = val
+            console.log('mutation', val);
         }
-
     },
     actions: {
         async getReportsAction(context) {
@@ -45,7 +47,14 @@ const report = {
             return response.data
         },
         async update(context, report) {
-            const res = await http.put(`api/reports/${report.id}`, report)
+            const res = await http.put(`api/reports/${report.id}`,
+                {
+                id: report.id,
+                title: report.title,
+                startTime: report.startTime,
+                endTime: report.endTime,
+                status: report.status
+                })
             return res.data
         },
         async delete(context, id) {
@@ -55,7 +64,7 @@ const report = {
         async getReportById({ commit }, id) {
             const res = await http.get(`api/reports/${id}`)
             if (res.status === 200) {
-                commit('setReports', res.data.data)
+                commit('setReport', res.data.data)
                 return res.data.data
             }
 

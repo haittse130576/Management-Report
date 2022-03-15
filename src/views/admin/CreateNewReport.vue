@@ -4,14 +4,14 @@
       :title="title"
       v-model="dialogVisible"
       :before-close="handleClose"
-      width="50%"
+      width="30%"
       @close="handleClose"
     >
       <el-form
         :model="ruleForm"
         :rules="rules"
         ref="ruleForm"
-        label-width="120px"
+        label-width="90px"
         class="demo-ruleForm"
       >
         <el-form-item label="Title" prop="title">
@@ -52,7 +52,7 @@
 <script>
 import { useStore } from 'vuex'
 export default {
-  name: 'AccountDetailDialog',
+  name: 'CreateReportDialog',
   props: {
     dialogVisible: {
       type: Boolean,
@@ -60,7 +60,7 @@ export default {
   },
   data() {
     return {
-      title: 'Account Detail Dialog',
+      title: 'Create Report Dialog',
       store: useStore(),
       ruleForm: {
         title: '',
@@ -77,8 +77,8 @@ export default {
           },
           {
             min: 3,
-            max: 5,
-            message: 'Length should be 3 to 5',
+            max: 20,
+            message: 'Length should be 3 to 20',
             trigger: 'blur',
           },
         ],
@@ -109,7 +109,7 @@ export default {
     }
   },
   computed: {},
-  mounted() {},
+ 
   methods: {
     handleClose() {
       this.$emit('close')
@@ -117,8 +117,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          
-          var response = await this.store.dispatch('insert', this.ruleForm)
+          var response = await this.store.dispatch('report/insert', this.ruleForm)
           if (response.status === 'success') {
             this.$message('Successfully!!!')
             this.handleClose()

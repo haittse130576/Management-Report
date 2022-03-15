@@ -4,81 +4,93 @@
       :title="title"
       v-model="dialogVisible"
       :before-close="handleClose"
-      width="20%"
+      width="50%"
       @close="handleClose"
     >
       <el-form
-        :model="dataTable"
-        ref="form"
+        :model="reportForm"
+        ref="reportForm"
         label-width="100px"
         :inline="false"
-        size="normal">
-        
-        <el-form-item label="Start Time">
+        size="normal"
+      >
+        <el-form-item label="Title" prop="title">
+          <el-input v-model="reportForm.title"></el-input>
+        </el-form-item>
+        <el-form-item label="Set Time" prop="endTime">
           <el-date-picker
-            v-model="report.startTime"
+            v-model="reportForm.endTime"
             type="datetime"
             placeholder="Select date and time">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="Set Time">
-          <el-date-picker
-            v-model="report.endTime"
-            type="datetime"
-            placeholder="Select date and time">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="Status">
-          <el-select v-model="report.status" placeholder="Status">
+        <el-form-item label="Status" prop="status">
+          <el-select v-model="reportForm.status" placeholder="Status">
             <el-option label="Active" value="Active"></el-option>
             <el-option label="Inactive" value="Inactive"></el-option>
           </el-select>
         </el-form-item>
-
-        <el-form-item align="center" header-align="right">
-          <el-popconfirm
-          confirm-button-text="OK"
-          cancel-button-text="No, Thanks"
-          :icon="InfoFilled"
-          title="Are you sure to Update this?"
-        >
-          <template #reference>
-            <el-button type="success">Update</el-button>
-          </template>
-        </el-popconfirm>
-           <el-button type="" class="btnCancel">Cancel</el-button>
-        </el-form-item>
+            <el-button type="success" @click="onUpdate('reportForm')">Update</el-button>
       </el-form>
     </el-dialog>
   </div>
 </template>
-<script>
-import { reactive, ref } from 'vue'
-import { mapMutations } from 'vuex'
 
+<script>
+import { mapGetters, mapMutations, mapState } from 'vuex'
+import { useStore } from 'vuex'
 export default {
-  name: 'EditReportDialog',
+  name: 'EditReport',
   props: {
     dialogVisible: {
       type: Boolean,
     },
-    report: {
-        type: Object,
-    }
   },
   data() {
     return {
-      title: 'Edit Report Dialog',
-        store: useStore(),
+      title: 'Update Report',
+      store: useStore(),
     }
   },
 
-  mounted() {},
+
+  computed: {
+    ...mapState('report', {
+      report: (state) => state.report,
+    }),
+    reportForm:{
+      get(){
+        return this.report
+      },
+      set(value){
+        this.store.commit('report/setReport', value)
+      }
+    }
+  },
   methods: {
+    ...mapMutations(['setReports']),
+
     handleClose() {
       this.$emit('close')
     },
-    ...mapMutations(['setReports']),
+    onUpdate(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        console.log("123---------",this.reportForm)
+        if (valid) {
+          var response = await this.store.dispatch('report/update', this.reportForm)
+          if (response.status === 'success') {
+            this.$message('Successfully!!!')
+            this.handleClose()
+            await this.store.dispatch('report/getReportsAction')
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+  },
+  mounted() {
   },
   watch: {
     visbleSync(val) {
@@ -88,4 +100,7 @@ export default {
 }
 </script>
 <style lang="scss">
+.btnCancel {
+  float: right;
+}
 </style>
