@@ -1,5 +1,4 @@
 import http from '../http-common'
-
 const project = {
     namespaced: true,
     state: {
@@ -14,15 +13,26 @@ const project = {
     getters: {
         getProject(state) {
             return state.project
+        },
+        getProjects(state) {
+            var result = state.projects.map(project =>project = {
+                id : project.id.toString(),
+                description: project.description,
+                projectName: project.projectName,
+                status :project.status
+            })
+            
+            console.log('projects', result);
+            return result
         }
     },
     mutations: {
         setProjects(state, val) {
             state.projects = val
+            console.log('state', state.projects);
         },
         setProject(state, val) {
             state.project = val
-            console.log(state.project);
         }
     },
     actions: {
@@ -62,6 +72,16 @@ const project = {
                 return res.data.data
             }
 
+        },
+        async getActiveProject({commit}){
+            const res = await http.get(`api/projects/get-active`)
+            if(res && res.data){
+                commit('setProjects', res.data.data)
+                return res.data.data
+            }else{
+                commit('setProjects',{})
+                return null
+            }
         }
     }
 }

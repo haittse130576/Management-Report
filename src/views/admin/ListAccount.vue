@@ -1,4 +1,5 @@
 <template>
+  <el-button type="primary" @click="onAdd" class="btnAdd">Add </el-button>
   <div class="card bg-default">
     <el-form
       class="mt-3"
@@ -36,7 +37,7 @@
   </div>
   <div class="mt-2 card bg-default">
     <div class="table-responsive">
-      <el-table ref="tableRef" :data="account" style="width: 100%" stripe>
+      <el-table ref="tableRef" :data="account" style="width: 100%" stripe v-loading="loading">
         <el-table-column
           type="index"
           label="No."
@@ -69,7 +70,6 @@
           align="center"
           prop="status"
         >
-          
         </el-table-column>
         <el-table-column align="center" label="Action" header-align="center">
           <template #default="scope">
@@ -88,10 +88,10 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :page-size="getAccountResult.pageSize"
-          :total="getAccountResult.totalCount"
-          :current-page="getAccountResult.pageIndex"
-          :page-count="getAccountResult.totalPages"
+          :page-size="accountPaging.pageSize"
+          :total="accountPaging.totalCount"
+          :current-page="accountPaging.pageIndex"
+          :page-count="accountPaging.totalPages"
           @current-change="setPage"
         >
         </el-pagination>
@@ -101,19 +101,26 @@
       :dialogVisible="dialogVisible"
       @close="handleAccountDetailDialogClose"
     />
+    <form-validation
+      :dialogVisible="dialogVisibleAdd"
+      @close="handleAccountDetailDialogAddClose"
+    />
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, useStore, mapState } from 'vuex'
 import { Search, Edit, Delete } from '@element-plus/icons-vue'
 import AccountDetailDialog from './AccountDetailDialog.vue'
+import FormValidation from './FormValidation.vue'
 export default {
   name: 'Groups',
   components: {
     AccountDetailDialog,
+    FormValidation,
   },
   data() {
     return {
+      store: useStore(),
       form: {
         fullname: '',
         email: '',
@@ -127,26 +134,22 @@ export default {
       searchResult: {},
       searchValue: {},
       dialogVisible: false,
+      dialogVisibleAdd: false,
+      loading: true
     }
   },
   computed: {
-    ...mapGetters(['getAccounts', 'getListRoles', 'getAccountResult']),
-    account: {
-      get() {
-        return this.getAccountResult.items
-      },
-    },
+    ...mapState('account',{
+      account:(state) => state.accounts,
+      accountPaging:(state) => state.accountResult
+    })
   },
   methods: {
-    ...mapActions([
-      'getAccountsAction',
-      'getListRolesAction',
-      'searchListAccounts',
-      'getAccountByEmail',
-    ]),
     async init() {
-      this.roles = await this.getListRolesAction()
-      this.searchResult = await this.searchListAccounts(this.searchValue)
+      this.loading = true
+      this.roles = await this.store.dispatch('getListRolesAction')
+      this.searchResult = await this.store.dispatch('account/searchListAccounts',this.searchValue)
+      this.loading = false
     },
     async onSubmit() {
       this.searchValue = {
@@ -169,7 +172,7 @@ export default {
       if (this.form.status.trim() === 'All') {
         this.searchValue.status = null
       }
-      this.searchResult = await this.searchListAccounts(this.searchValue)
+      await this.init()
     },
     async setPage(val) {
       console.log(val);
@@ -179,7 +182,7 @@ export default {
         roleId: this.form.role,
         status: this.form.status,
         pageNumber: val,
-        pageSize: this.getAccountResult.pageSize,
+        pageSize: this.accountPaging.pageSize,
       }
       if (this.form.fullname.trim() === '') {
         this.searchValue.fullname = null
@@ -193,16 +196,23 @@ export default {
       if (this.form.status.trim() === 'All') {
         this.searchValue.status = null
       }
-      this.searchResult = await this.searchListAccounts(this.searchValue)
+      await this.init()
     },
     async onEdit(index, email) {
-      await this.getAccountByEmail(email)
+      await this.store.dispatch('account/getAccountByEmail', email)
       this.dialogVisible = true
+    },
+    onAdd() {
+      this.dialogVisibleAdd = true
     },
     handleAccountDetailDialogClose() {
       this.dialogVisible = false
     },
+    handleAccountDetailDialogAddClose() {
+      this.dialogVisibleAdd = false
+    },
   },
+
   mounted() {
     this.init()
   },

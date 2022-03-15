@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 export default {
   name: 'Teacher Home',
@@ -82,15 +82,11 @@ export default {
     return {
       groups: [],
       listAccounts: [],
-      
+      store: useStore(),
     }
   },
   computed: {},
   methods: {
-    ...mapActions([
-      'getGroupByAccountAction',
-      'getAccountByGroupIdAction',
-    ]),
     async projectList() {
       //Project
       // let resultP = await this.getProjectsAction()
@@ -98,13 +94,13 @@ export default {
       var user = JSON.parse(localStorage.getItem("USER"))
         console.log(user.account.email)
         var mail = "admin"
-       let result = await this.getGroupByAccountAction(mail);
+       let result = await this.store.dispatch('group/getGroupByAccountAction',mail);
        this.groups = result.data.data
       console.log(this.groups)
     },
     
      listStudentInGroup(groupId){
-      const result = this.getAccountByGroupIdAction(groupId)
+      const result = this.store.dispatch('group/getAccountByGroupIdAction',groupId)
       this.listAccounts = result.data
     
     },
