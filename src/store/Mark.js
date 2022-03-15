@@ -4,6 +4,10 @@ const mark = {
     state:{
         students:[],
         mark:{
+        },
+        student:{
+            id: '',
+            accountId: '',
             report1:'',
             report2:'',
             report3:'',
@@ -13,8 +17,7 @@ const mark = {
             report7:'',
             status:'',
             final:''
-        },
-        student:{}
+        }
     },
     getters:{
         getStudents(state){
@@ -44,7 +47,12 @@ const mark = {
                 return res.data.data
             }
             
+        },
+        async updateMark(context,student){
+            const res = await http.put(`api/marks/update`, student)
+            return res.data
         }
     }
+
 }
 export default mark
