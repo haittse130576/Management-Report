@@ -83,12 +83,16 @@
 </template>
 <script>
 import { ref } from 'vue'
-import useStorate from '@/useStorage'
+import useStorage from '@/useStorage'
+import { useRouter } from 'vue-router'
 export default {
+  name: 'Submission',
   setup() {
     const file = ref(null)
+    const router = useRouter()
+
     const reportName = ref('report_1')
-    const { uploadFile } = useStorate(reportName)
+    const { uploadFile } = useStorage(reportName)
     function onChangeFile(event) {
       const selected = event.target.files[0]
       if (selected) {
