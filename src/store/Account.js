@@ -50,7 +50,7 @@ const account = {
         async getAccountByEmail(context, email){
             const response = await http.get(`/api/accounts/detail`,{params:{email: email}})
             if(response.data.status === 'success'){
-                context.commit('setAccountDetail', response.data)
+                context.commit('setAccountDetail', response.data.data)
             }
             return response.data
             
@@ -84,6 +84,23 @@ const account = {
           })
           return res.data
         },
+        async update(context, account) {
+          
+          let body = { 
+            id: account.id,      
+            email: account.email,
+            password: account.password,
+            fullname: account.fullname,
+            roleId: account.roleId,
+            birthday: account.birthday,
+            phone: account.phone,
+            address: account.address,
+            status: account.status,
+            accountCode: account.accountCode,
+          }
+          const res = await http.put(`api/accounts/update`, body)
+          return res.data
+      },
     }
 
 }
