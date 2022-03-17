@@ -164,7 +164,7 @@ export default {
       if (date == undefined) {
         return ''
       }
-      return moment(date).format('hh:mm:ss [At] YYYY-MM-DD')
+      return moment(date).format('DD-MM-YYYY - hh:mm')
     },
   },
   mounted() {

@@ -84,6 +84,7 @@ export default {
         ],
         startTime: [
           {
+           
             type: 'date',
             required: true,
             message: 'Please pick a date',
@@ -92,6 +93,7 @@ export default {
         ],
         endTime: [
           {
+           
             type: 'date',
             required: true,
             message: 'Please pick a time',
