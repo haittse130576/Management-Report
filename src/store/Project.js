@@ -21,15 +21,12 @@ const project = {
                 projectName: project.projectName,
                 status :project.status
             })
-            
-            console.log('projects', result);
             return result
         }
     },
     mutations: {
         setProjects(state, val) {
             state.projects = val
-            console.log('state', state.projects);
         },
         setProject(state, val) {
             state.project = val
@@ -37,7 +34,6 @@ const project = {
     },
     actions: {
         async search({ commit }, search) {
-            console.log(search);
             const response = await http.get('/api/projects/search', {
                 params: {
                     projectName: search.projectName,

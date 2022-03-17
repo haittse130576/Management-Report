@@ -7,6 +7,8 @@ import group from './Group'
 import mark from './Mark'
 import project from './Project'
 import report from './Report'
+import submit from './Submit'
+
 
 // const auth = {
 //   namespaced: true,
@@ -62,7 +64,8 @@ export default createStore({
     project,
     report,
     mark, 
-    group
+    group,
+    submit
   },
 })
 
