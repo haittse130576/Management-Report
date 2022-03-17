@@ -70,6 +70,7 @@ export default {
     return {
       title: 'Create New Account',
       store: useStore(),
+      searchValue: {},
       ruleForm: {
         fullname: '',
         password: '',
@@ -141,6 +142,9 @@ export default {
   mounted() {
   },
   methods: {
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
+    },
     handleClose() {
       this.$emit('close')
     },
@@ -154,9 +158,12 @@ export default {
               title: 'Success',
               message: 'Insert successfully',
               type: 'success',
+              
             })
               this.handleClose()
-              await this.store.dispatch('account/searchListAccounts')
+              await this.store.dispatch('account/searchListAccounts', this.searchValue)     
+              this.resetForm('ruleForm')
+              
           } else {
             this.$notify({
               title: 'Error',
@@ -169,10 +176,8 @@ export default {
           return false
         }
       })
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
-    },
+    }
+    
   },
   watch: {
     visbleSync(val) {
