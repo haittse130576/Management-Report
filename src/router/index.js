@@ -70,6 +70,11 @@ const routes = [
             component: () => import('@/views/admin/ListProjects.vue'),
           },
           {
+            path: '/admin/reports',
+            name: 'Manage Reports',
+            component: () => import('@/views/admin/ManageReport.vue'),
+          },
+          {
             path: '/user/profile',
             name: 'Profile',
             component: () => import('@/views/user/Profile.vue'),
@@ -108,6 +113,11 @@ const routes = [
         path: '/user/project',
         name: 'Project',
         component: () => import('@/views/user/Project.vue'),
+      },
+      {
+        path: 'user/report',
+        name: 'Report',
+        component: () => import('@/views/user/Report.vue'),
       },
 
 

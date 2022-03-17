@@ -38,7 +38,12 @@ export default [
         component: 'CNavItem',
         name: 'List Projects',
         to: '/admin/list-projects'
-      }
+      },
+      {
+        component: 'CNavItem',
+        name: 'Manage Reports',
+        to: '/admin/reports'
+      },
     ],
   }
 ]
