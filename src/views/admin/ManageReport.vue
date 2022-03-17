@@ -27,16 +27,16 @@
             header-align="center"
           />
           <el-table-column
-            prop="endTime"
+            prop="startTime"
             align="center"
-            label="Time End"
+            label="Start Time"
             header-align="center"
             :formatter="dateFormat"
           />
           <el-table-column
-            prop="startTime"
+            prop="endTime"
             align="center"
-            label="Start Time"
+            label="End Time"
             header-align="center"
             :formatter="dateFormat"
           />
