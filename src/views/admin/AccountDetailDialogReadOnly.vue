@@ -15,25 +15,25 @@
         size="normal"
       >
         <el-form-item label="Email">
-          <el-input v-model="getAccountDetail.data.email" disabled></el-input>
+          <el-input v-model="getAccountDetail.email" disabled></el-input>
         </el-form-item>
         <el-form-item label="Full Name">
-          <el-input v-model="getAccountDetail.data.fullname" disabled></el-input>
+          <el-input v-model="getAccountDetail.fullname" disabled></el-input>
         </el-form-item>
         <el-form-item label="Phone">
-          <el-input v-model="getAccountDetail.data.phone" disabled></el-input>
+          <el-input v-model="getAccountDetail.phone" disabled></el-input>
         </el-form-item>
         <el-form-item label="Address">
-          <el-input v-model="getAccountDetail.data.address" disabled></el-input>
+          <el-input v-model="getAccountDetail.address" disabled></el-input>
         </el-form-item>
         <el-form-item label="Role">
-          <el-input v-model="getAccountDetail.data.roleName" disabled></el-input>
+          <el-input v-model="getAccountDetail.roleName" disabled></el-input>
         </el-form-item>
         <el-form-item label="Birthday">
-          <el-input v-model="getAccountDetail.data.birthday" disabled></el-input>
+          <el-input v-model="getAccountDetail.birthday" disabled></el-input>
         </el-form-item>
         <el-form-item label="Status">
-          <el-input v-model="getAccountDetail.data.status" disabled></el-input>
+          <el-input v-model="getAccountDetail.status" disabled></el-input>
         </el-form-item>
         
       </el-form>
@@ -56,6 +56,7 @@ export default {
   },
   computed: {
     ...mapGetters('account',['getAccountDetail']),
+    
   },
   mounted() {
   },
