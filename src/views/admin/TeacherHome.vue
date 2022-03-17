@@ -1,118 +1,113 @@
 <template>
   <CRow>
-    <ul >
-      <li v-for="groupItem in this.groups" :key="groupItem.id">
-        <CCol :xs="12">
-          <CCard class="mb-4">
-            <CCardHeader>
-              <strong>
-                <b>{{ groupItem.projectName }}</b></strong
-              >
-            </CCardHeader>
-            <CCardBody>
-              <small>{{ groupItem.year }} - {{groupItem.semester}}</small>
-              <CAccordion>
-                <CAccordionItem :item-key="1">
-                  <CAccordionHeader>Group Members </CAccordionHeader>
-                  <CAccordionBody>
-                    <CListGroup>
-                      <CListGroupItem component="a" href="#" active>
-                        Trần Thanh Hài
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Lê Vĩnh Đức Mạnh
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Kiều Xuân Trường
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Đạt Nguyễn
-                      </CListGroupItem>
-                    </CListGroup>
-                  </CAccordionBody>
-                </CAccordionItem>
-                <CAccordionItem :item-key="2">
-                  <CAccordionHeader>List Report </CAccordionHeader>
-                  <CAccordionBody>
-                    <CListGroup>
-                      <CListGroupItem component="a" href="#" active>
-                        Report 1
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Report 2
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Report 3
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Report 4
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Report 5
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Report 6
-                      </CListGroupItem>
-                      <CListGroupItem component="a" href="#">
-                        Report 7
+    <template v-for="groupItem in this.groups" :key="groupItem.id">
+      <CCol :xs="12">
+        <CCard class="mb-4">
+          <CCardHeader>
+            <strong>
+              <b>{{ groupItem.projectName }}</b></strong
+            >
+          </CCardHeader>
+          <CCardBody>
+            <small>{{ groupItem.year }} - {{ groupItem.semester }}</small>
+            <CAccordion>
+              <CAccordionItem :item-key="1">
+                <CAccordionHeader @click="mark(groupItem.id)"
+                  >Mark on Group members
+                </CAccordionHeader>
+              </CAccordionItem>
+              <CAccordionItem>
+                <CAccordionHeader>List Report </CAccordionHeader>
+                <CAccordionBody>
+                  <template v-for="item in this.reports" :key="item.id">
+                    <CListGroup :item-key="2">
+                      <CListGroupItem @click="reportDir(groupItem,item)">
+                        <div class="row">
+                          <div class="col">
+                            <CAccordionBody>{{ item.title }}</CAccordionBody>
+                          </div>
+                          <div class="col">
+                            <CAccordionBody class="d-flex flex-row-reverse"
+                              >Due:
+                              {{ dateFormat(item.endTime) }}</CAccordionBody
+                            >
+                          </div>
+                        </div>
                       </CListGroupItem>
                     </CListGroup>
-                  </CAccordionBody>
-                </CAccordionItem>
-              </CAccordion>
-              <div class="text-center"  >
-                  <CButton color="primary"  @click="mark(groupItem.id )"
-                    >Mark</CButton
-                  >
-              </div>
-            </CCardBody>
-          </CCard>
-        </CCol>
-      </li>
-    </ul>
+                  </template>
+                </CAccordionBody>
+              </CAccordionItem>
+            </CAccordion>
+          </CCardBody>
+        </CCard>
+      </CCol>
+    </template>
   </CRow>
 </template>
 
 <script>
-import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { mapGetters, mapActions, useStore, mapState } from 'vuex'
+import moment from 'moment'
 export default {
   name: 'Teacher Home',
   data() {
     return {
       groups: [],
-      listAccounts: [],
       store: useStore(),
+      listReports: [],
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('report', {
+      reports: (state) => state.reports,
+    }),
+  },
   methods: {
     async projectList() {
-      //Project
-      // let resultP = await this.getProjectsAction()
-      // this.projects = resultP.data
-      var user = JSON.parse(localStorage.getItem("USER"))
-        console.log(user.account.email)
-        var mail = "admin"
-       let result = await this.store.dispatch('group/getGroupByAccountAction',mail);
-       this.groups = result.data.data
+      var user = JSON.parse(localStorage.getItem('USER'))
+      console.log(user.account.email)
+      let result = await this.store.dispatch(
+        'group/getGroupByAccountAction',
+        user.account.email,
+      )
+      this.groups = result.data.data
       console.log(this.groups)
+      await this.store.dispatch('report/getReportsAction')
+      console.log(this.reports)
     },
-    
-     listStudentInGroup(groupId){
-      const result = this.store.dispatch('group/getAccountByGroupIdAction',groupId)
-      this.listAccounts = result.data
-    
-    },
-    mark(val)    {
-        const router = useRouter()
 
-        const obj = val
-        console.log("group ID is:"+obj)
-        this.$router.push({ name: 'Scores',params:{obj}})    
-        
-    }
+    mark(val) {
+      const router = useRouter()
+      const obj = val
+      console.log('group ID is:' + obj)
+      this.$router.push({ name: 'Scores', params: { obj } })
+    },
+    async reportDir(groupItem,item) {
+      console.log('report',item)
+            console.log('group',groupItem)
+      const query = {
+        groupId: groupItem.id,
+        reportId: item.id,
+      }
+      
+      console.log(query)
+      await this.store.dispatch(
+        'submit/getSubmitByReportAndProject',
+        query
+      )
+
+      this.$router.push({ path: '/teacher/submit'})
+    },
+    dateFormat(date) {
+      if (date == undefined) {
+        return ''
+      }
+      return moment(date).format(' DD-MM-YYYY - hh:mm')
+    },
   },
+
   mounted() {
     this.projectList()
   },

@@ -1,7 +1,14 @@
 <template>
-  <div id="app">
-    <!-- <h3 :v-model="group">{{group.projectName}}</h3> -->
-  </div>
+  <ul prop="group">
+    <h4>
+      <small>Project: </small>
+      <strong>{{ group.projectName }}</strong>
+    </h4>
+    <h6>
+      <small>Group: </small>
+      <strong> {{ group.groupCode }}</strong>
+    </h6>
+  </ul>
   <div class="mt-2 card bg-default">
     <div class="table-responsive">
       <el-table :data="students" style="width: 100%" stripe>
@@ -154,37 +161,38 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, useStore } from 'vuex'
 import { Edit } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 
+
 export default {
   name: 'Scores',
-  components: {},
+
   data() {
     return {
       Edit,
-
+      store: useStore(),
       students: [],
       rowState: {},
       group: {},
     }
   },
-  computed: {
-  },
+  computed: {},
   props: true,
   methods: {
     ...mapActions(['getMarksByGroup', 'updateMark']),
     async init() {
       const router = useRouter()
-      console.log("ID is:"+this.$route.params.obj)
+      console.log('ID is:' + this.$route.params.obj)
       var tote = this.$route.params.obj
-      if(tote==null) {
+      if (tote === null) {
         this.$router.go(-1)
       }
       this.students = await this.getMarksByGroup(tote)
-      // this.group = await this.getGroupByIdAction(tote)
-      // console.log(this.group)
+      const sol = await this.store.dispatch('group/getGroupByIdAction', tote)
+      this.group = sol.data.data
+      console.log(this.group)
       console.log(this.students)
     },
     // async onSubmit() {
@@ -210,30 +218,25 @@ export default {
     // },
 
     async onEdit(index, row) {
-      
       const score = {
-            id: row.id,
-            accountId: row.accountId,
-            report1: row.report1,
-            report2: row.report2,
-            report3: row.report3,
-            report4: row.report4,
-            report5: row.report5,
-            report6: row.report6,
-            report7: row.report7,
-            status: row.status,
-            final: row.final
-          }
-          console.log(score)
-        this.$confirm(
-        'Confirm update mark. Continue?',
-        'Warning',
-        {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning',
-        },
-      )
+        id: row.id,
+        accountId: row.accountId,
+        report1: row.report1,
+        report2: row.report2,
+        report3: row.report3,
+        report4: row.report4,
+        report5: row.report5,
+        report6: row.report6,
+        report7: row.report7,
+        status: row.status,
+        final: row.final,
+      }
+      console.log(score)
+      this.$confirm('Confirm update mark. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      })
         .then(() => {
           this.updateMark(score)
           this.$message({
