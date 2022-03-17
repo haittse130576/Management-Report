@@ -55,6 +55,14 @@ const account = {
             return response.data
             
         },
+        async deleteAccountById(context, id){
+          const response = await http.delete(`/api/accounts/delete`,{params:{id:id}})
+          if(response.data.status === 'success'){
+            return response.data
+          }
+          return response.data
+          
+      },
         async getAccountByGroup({commit}, groupCode){
             const res = await http.get(`api/accounts/get-by-group/${groupCode}`)
             if(res && res.data){

@@ -1,5 +1,12 @@
 <template>
-  <el-button type="primary" @click="onAdd" class="btnAdd">Add </el-button>
+  <!-- <el-button type="primary" @click="onAdd" class="btnAdd">Add </el-button> -->
+  <div class="card bg-default">
+    <span class="m-2">
+      <el-button type="primary" size="default" @click="onAdd"
+        >Add New Account</el-button
+      >
+    </span>
+  </div>
   <div class="card bg-default">
     <el-form
       class="mt-3"
@@ -75,11 +82,17 @@
           <template #default="scope">
             <el-button-group class="ml-4">
               <el-button
+              size="small"
                 type="primary"
                 :icon="Edit"
                 @click="onEdit(scope.$index, scope.row.email)"
               ></el-button>
-              <el-button type="danger" :icon="Delete"></el-button>
+            <el-button
+                size="small"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row.id)"
+               >Delete
+            </el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -173,6 +186,33 @@ export default {
         this.searchValue.status = null
       }
       await this.init()
+    },
+    
+    handleDelete(index, row) {
+      var id = row
+      console.log(row)
+      this.$confirm(
+        'This will permanently delete the account. Continue?',
+        'Warning',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        },
+      )
+        .then(() => {
+          this.store.dispatch('account/deleteAccountById', id)
+          this.$message({
+            type: 'success',
+            message: 'Delete completed',
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Delete canceled',
+          })
+        })
     },
     async setPage(val) {
       console.log(val);
