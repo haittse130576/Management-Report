@@ -20,31 +20,33 @@
                 <template #label>
                   <div class="cell-item">Project Name</div>
                 </template>
-                kooriookami
+                {{submit.projectName}}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template #label>
                   <div class="cell-item">Report Name</div>
                 </template>
-                Report 1
+                {{submit.reportName}}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template #label>
                   <div class="cell-item">Due date</div>
                 </template>
-                18/5/2022 23:59 PM
+                  {{dateFormat(submit.endTime)}}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template #label>
                   <div class="cell-item">Last modified</div>
                 </template>
-                18/5/2022 23:59 PM
+                {{dateFormat(submit.submitTime)}}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template #label>
                   <div class="cell-item">File submissions</div>
                 </template>
+                {{submit.reportUrl}}
                 <CInputGroup>
+                  
                   <CFormInput
                     type="file"
                     id="inputGroupFile04"
@@ -82,33 +84,34 @@
   </div>
 </template>
 <script>
-import { ref } from 'vue'
-import useStorage from '@/useStorage'
-import { useRouter } from 'vue-router'
+import { mapGetters, mapActions, mapState } from 'vuex'
+import moment from 'moment'
 export default {
-  name: 'Submission',
-  setup() {
-    const file = ref(null)
-    const router = useRouter()
-
-    const reportName = ref('report_1')
-    const { uploadFile } = useStorage(reportName)
-    function onChangeFile(event) {
-      const selected = event.target.files[0]
-      if (selected) {
-        file.value = selected
-      } else {
-        console.log(file)
-      }
-    }
-    function onSubmit() {
-      if (file.value) uploadFile(file.value)
-    }
-
+  name: 'Submission', 
+   data() {
     return {
-      onChangeFile,
-      onSubmit,
     }
+  },
+  computed: {
+    ...mapState('submit', {
+      submit: (state) => state.submit,
+    }),
+  },
+  methods: {
+    async projectList() {
+     
+    },
+
+    dateFormat(date) {
+      if (date == undefined) {
+        return ''
+      }
+      return moment(date).format(' DD-MM-YYYY - hh:mm')
+    },
+  },
+
+  mounted() {
+    this.projectList()
   },
 }
 </script>

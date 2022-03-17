@@ -186,7 +186,7 @@ export default {
       const router = useRouter()
       console.log('ID is:' + this.$route.params.obj)
       var tote = this.$route.params.obj
-      if (tote == null) {
+      if (tote === null) {
         this.$router.go(-1)
       }
       this.students = await this.getMarksByGroup(tote)
