@@ -188,27 +188,27 @@ const router = createRouter({
 
 })
 
-// router.beforeEach(async (to, from, next) => {
-//   const { authorize } = to.meta
-//   const currentUser = localStorage.getItem('USER');
-//   const user = JSON.parse(currentUser)
-//   if(to.matched.some((record) => record.meta.requiresAuth)){
-//     if(currentUser === null){
-//       next('/login')
-//     }else{
+router.beforeEach(async (to, from, next) => {
+  const { authorize } = to.meta
+  const currentUser = localStorage.getItem('USER');
+  const user = JSON.parse(currentUser)
+  if(to.matched.some((record) => record.meta.requiresAuth)){
+    if(currentUser === null){
+      next('/login')
+    }else{
 
-//       if(authorize.length && !authorize.includes(user.account.roleName)){
-//         alert("You dont have access permission")
-//         return next({
-//           path: '/login'
-//         })
-//       }else{
-//         next()
-//       }
+      if(authorize.length && !authorize.includes(user.account.roleName)){
+        alert("You dont have access permission")
+        return next({
+          path: '/login'
+        })
+      }else{
+        next()
+      }
 
-//     }
-//   }
-//   next()
-// })
+    }
+  }
+  next()
+})
 
 export default router
