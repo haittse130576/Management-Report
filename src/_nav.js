@@ -23,13 +23,8 @@ export default [
       },
       {
         component: 'CNavItem',
-        name: 'Score',
-        to: '/admin/scores'
-      },
-      {
-        component: 'CNavItem',
         name: 'Teacher Home',
-        to: '/admin/teacher-home'
+        to: '/teacher/teacher-home'
       }
     ],
   },
@@ -43,7 +38,12 @@ export default [
         component: 'CNavItem',
         name: 'List Projects',
         to: '/admin/list-projects'
-      }
+      },
+      {
+        component: 'CNavItem',
+        name: 'Manage Reports',
+        to: '/admin/reports'
+      },
     ],
   }
 ]

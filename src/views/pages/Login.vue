@@ -51,7 +51,7 @@ export default {
               router.push('/admin/dashboard')
               break
             case 'Teacher':
-              router.push('/user/Home')
+              router.push('/teacher/teacher-home')
               break
             case 'Student':
               router.push('/user/Home')

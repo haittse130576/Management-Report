@@ -50,11 +50,19 @@ const account = {
         async getAccountByEmail(context, email){
             const response = await http.get(`/api/accounts/detail`,{params:{email: email}})
             if(response.data.status === 'success'){
-                context.commit('setAccountDetail', response.data)
+                context.commit('setAccountDetail', response.data.data)
             }
             return response.data
             
         },
+        async deleteAccountById(context, id){
+          const response = await http.delete(`/api/accounts/delete`,{params:{id:id}})
+          if(response.data.status === 'success'){
+            return response.data
+          }
+          return response.data
+          
+      },
         async getAccountByGroup({commit}, groupCode){
             const res = await http.get(`api/accounts/get-by-group/${groupCode}`)
             if(res && res.data){
@@ -76,6 +84,23 @@ const account = {
           })
           return res.data
         },
+        async update(context, account) {
+          
+          let body = { 
+            id: account.id,      
+            email: account.email,
+            password: account.password,
+            fullname: account.fullname,
+            roleId: account.roleId,
+            birthday: account.birthday,
+            phone: account.phone,
+            address: account.address,
+            status: account.status,
+            accountCode: account.accountCode,
+          }
+          const res = await http.put(`api/accounts/update`, body)
+          return res.data
+      },
     }
 
 }

@@ -1,5 +1,12 @@
 <template>
-  <el-button type="primary" @click="onAdd" class="btnAdd">Add </el-button>
+  <!-- <el-button type="primary" @click="onAdd" class="btnAdd">Add </el-button> -->
+  <div class="card bg-default">
+    <span class="m-2">
+      <el-button type="primary" size="default" @click="onAdd"
+        >Add New Account</el-button
+      >
+    </span>
+  </div>
   <div class="card bg-default">
     <el-form
       class="mt-3"
@@ -75,11 +82,23 @@
           <template #default="scope">
             <el-button-group class="ml-4">
               <el-button
+                size="small"
+                type="primary"
+                :icon="View"
+                @click="onRead(scope.$index, scope.row.email)"
+              ></el-button>
+              <el-button
+              size="small"
                 type="primary"
                 :icon="Edit"
                 @click="onEdit(scope.$index, scope.row.email)"
               ></el-button>
-              <el-button type="danger" :icon="Delete"></el-button>
+            <el-button
+                size="small"
+                type="danger"
+                @click="handleDelete(scope.$index, scope.row.id)"
+               >Delete
+            </el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -105,18 +124,24 @@
       :dialogVisible="dialogVisibleAdd"
       @close="handleAccountDetailDialogAddClose"
     />
+    <account-detail-dialog-read-only
+      :dialogVisible="dialogVisibleRead"
+      @close="handleAccountDetailDialogReadOnlyClose"
+    />
   </div>
 </template>
 <script>
 import { mapGetters, mapActions, useStore, mapState } from 'vuex'
-import { Search, Edit, Delete } from '@element-plus/icons-vue'
+import { Search, Edit, Delete, View } from '@element-plus/icons-vue'
 import AccountDetailDialog from './AccountDetailDialog.vue'
 import FormValidation from './FormValidation.vue'
+import AccountDetailDialogReadOnly from './AccountDetailDialogReadOnly.vue' 
 export default {
   name: 'Groups',
   components: {
     AccountDetailDialog,
     FormValidation,
+    AccountDetailDialogReadOnly,
   },
   data() {
     return {
@@ -130,19 +155,22 @@ export default {
 
       Edit,
       Delete,
+      View,
       roles: [],
       searchResult: {},
       searchValue: {},
       dialogVisible: false,
       dialogVisibleAdd: false,
-      loading: true
+      dialogVisibleRead: false,
+      loading: true,
     }
   },
   computed: {
     ...mapState('account',{
       account:(state) => state.accounts,
       accountPaging:(state) => state.accountResult
-    })
+    }),
+    ...mapGetters(['getListRoles'])
   },
   methods: {
     async init() {
@@ -174,6 +202,36 @@ export default {
       }
       await this.init()
     },
+    
+    handleDelete(index, row) {
+      var id = row
+      console.log(row)
+      this.$confirm(
+        'This will permanently delete the account. Continue?',
+        'Warning',
+        {
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+        },
+      )
+        .then(async() => {
+          await this.store.dispatch('account/deleteAccountById', id)
+          this.$message({
+            type: 'success',
+            message: 'Delete completed',
+
+          })
+
+          await this.init()     
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Delete canceled',
+          })
+        })
+    },
     async setPage(val) {
       console.log(val);
       this.searchValue = {
@@ -201,6 +259,13 @@ export default {
     async onEdit(index, email) {
       await this.store.dispatch('account/getAccountByEmail', email)
       this.dialogVisible = true
+    },
+    async onRead(index, email) {
+      await this.store.dispatch('account/getAccountByEmail', email)
+      this.dialogVisibleRead = true
+    },
+    handleAccountDetailDialogReadOnlyClose() {
+      this.dialogVisibleRead = false
     },
     onAdd() {
       this.dialogVisibleAdd = true
