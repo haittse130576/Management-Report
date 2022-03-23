@@ -12,48 +12,143 @@
         :rules="rules"
         ref="ruleForm"
       >
-        <el-form-item label="Group Code" prop="groupCode">
+        <el-row :gutter="20">
+          <el-col :span="12" :offset="0">
+            <el-form-item label="Group Code" prop="groupCode">
+              <el-input
+                v-model="groupForm.groupCode"
+                placeholder="Please input group code"
+                @change="onCheckExist"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Project" prop="projectId">
+              <el-select
+                v-model="groupForm.projectId"
+                placeholder="Please select a project"
+              >
+                <el-option
+                  v-for="project in projects"
+                  :key="project"
+                  :label="project.projectName"
+                  :value="project.id"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="Semester" prop="semester">
+              <el-select
+                v-model="groupForm.semester"
+                placeholder="Please select a semester"
+              >
+                <el-option label="Spring" value="Spring"></el-option>
+                <el-option label="Summer" value="Summer"></el-option>
+                <el-option label="Fall" value="Fall"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Year" prop="year">
+              <el-date-picker
+                v-model="groupForm.year"
+                type="year"
+                placeholder="Pick a year"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-form-item label="Mentor" prop="mentor">
           <el-input
-            v-model="groupForm.groupCode"
-            placeholder="Please input group code"
-            @change="onCheckExist"
+            v-model="groupForm.mentor"
+            placeholder="Please input mentor code"
+            @click="onClickMentorInput"
           ></el-input>
         </el-form-item>
-        <el-form-item label="Project" prop="projectId">
-          <el-select
-            v-model="groupForm.projectId"
-            placeholder="Please select a project"
-          >
-            <el-option
-              v-for="project in projects"
-              :key="project"
-              :label="project.projectName"
-              :value="project.id"
-            ></el-option>
-          </el-select>
+        <el-form-item label="Leader" prop="leader">
+          <el-input
+            v-model="groupForm.leader"
+            placeholder="Please input leader code"
+            @click="onClickLeaderInput"
+          ></el-input>
         </el-form-item>
-        <el-form-item label="Semester" prop="semester">
-          <el-select
-            v-model="groupForm.semester"
-            placeholder="Please select a semester"
-          >
-            <el-option label="Spring" value="Spring"></el-option>
-            <el-option label="Summer" value="Summer"></el-option>
-            <el-option label="Fall" value="Fall"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Year" prop="year">
-          <el-date-picker
-            v-model="groupForm.year"
-            type="year"
-            placeholder="Pick a year"
-          >
-          </el-date-picker>
+        <el-form-item
+          v-for="(member, index) in groupForm.members"
+          :label="`Member ${index + 1}`"
+          :key="member.key"
+          :prop="'members.' + index + '.value'"
+          :rules="{
+            required: true,
+            message: 'Member can not be null',
+            trigger: 'blur',
+          }"
+        >
+          <el-row :gutter="20">
+            <el-col :span="20" :offset="0">
+              <el-input
+                v-model="member.value"
+                placeholder="Please input member code"
+                @click="onClickMemberInput(index, member)"
+              ></el-input>
+            </el-col>
+            <el-col :span="4" :offset="0">
+              <el-button @click.prevent="removeDomain(member)"
+                >Delete</el-button
+              >
+            </el-col>
+          </el-row>
         </el-form-item>
       </el-form>
+      <el-dialog
+        title="Search account"
+        v-model="dialogSearchAccountVisible"
+        width="50%"
+        @close="handleSearchClose"
+        append-to-body
+      >
+        <span>
+          <div>
+            <el-form
+              :model="memberFormSearch"
+              ref="memberFormSearch"
+              :rules="rules"
+              label-width="80px"
+              :inline="false"
+              size="normal"
+            >
+              <el-row :gutter="20">
+                <el-col :span="12" :offset="0">
+                  <el-form-item label="Code">
+                    <el-input v-model="memberFormSearch.Code"></el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12" :offset="0">
+                  <el-form-item label="Name">
+                    <el-input v-model="memberFormSearch.Name"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button type="primary" @click="onSearchMember"
+                      >Search</el-button
+                    >
+                    <el-button>Reset</el-button>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </div>
+          <div>
+            <el-table :data="dataTable" border stripe>
+              <el-table-column prop="acountCode" label="Code" width="150px">
+              </el-table-column>
+              <el-table-column prop="fullname" label="Name"> </el-table-column>
+            </el-table>
+          </div>
+        </span>
+      </el-dialog>
+
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogFormVisible = false">Cancel</el-button>
+          <el-button @click="addDomain">New member</el-button>
           <el-button type="primary" @click="onSubmit('ruleForm')"
             >Confirm</el-button
           >
@@ -160,8 +255,8 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions, useStore, mapState } from 'vuex'
-import { Search, Edit, Delete } from '@element-plus/icons-vue'
+import { useStore, mapState } from 'vuex'
+import { Edit, Delete } from '@element-plus/icons-vue'
 export default {
   name: 'Groups',
   components: {},
@@ -172,9 +267,9 @@ export default {
       }
       setTimeout(async () => {
         var res = await this.store.dispatch('group/checkGroupCodeExist', value)
-        if (res && res.data) {         
+        if (res && res.data) {
           callback(new Error('The group code is existed'))
-        } else {           
+        } else {
           callback()
         }
       }, 1000)
@@ -188,9 +283,18 @@ export default {
       },
       groupForm: {
         groupCode: '',
-        semester: '',
+        semester: 'Summer',
         year: '2022',
         projectId: '',
+        mentor: '',
+        leader: '',
+        members: [
+          {
+            key: 1,
+            value: '',
+          },
+          { key: 2, value: '' },
+        ],
       },
       groupCodeCheck: false,
       Edit,
@@ -208,6 +312,7 @@ export default {
             trigger: 'blur',
           },
           {
+            required: true,
             min: 7,
             max: 7,
             message: 'Length must be 7',
@@ -228,7 +333,7 @@ export default {
             trigger: 'change',
           },
         ],
-        date1: [
+        year: [
           {
             type: 'date',
             required: true,
@@ -236,6 +341,34 @@ export default {
             trigger: 'change',
           },
         ],
+        mentor: [
+          {
+            required: true,
+            message: 'Please input mentor code',
+            trigger: 'blur',
+          },
+        ],
+        leader: [
+          {
+            required: true,
+            message: 'Please input leader code',
+            trigger: 'blur',
+          },
+        ],
+      },
+      memberFormSearch: {
+        roleId: 3,
+        Code: '',
+        Name: '',
+        Semester: 'Summer',
+        Year: '2022',
+      },
+      dataTable: [],
+      dialogSearchAccountVisible: false,
+      currentMemberFlag: false,
+      currentMemberField: {
+        index: 0,
+        member: {},
       },
     }
   },
@@ -281,13 +414,16 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
           console.log('group', this.groupForm)
-          var res = await this.store.dispatch('group/insertGroup', this.groupForm)
+          var res = await this.store.dispatch(
+            'group/insertGroup',
+            this.groupForm,
+          )
           if (res && res.data.status === 'success') {
             this.$message({
               message: 'Congrats, the group create successfully.',
               type: 'success',
             })
-            this.dialogFormVisible =false
+            this.dialogFormVisible = false
             await this.init()
           } else {
             this.$message.error('Oops, this is a error.')
@@ -322,7 +458,57 @@ export default {
     },
     onEdit(index, groupId) {
       this.$router.push('/admin/groups/detail')
-      this.store.commit('group/setGroup', {id:groupId})
+      this.store.commit('group/setGroup', { id: groupId })
+    },
+    onClickMentorInput() {
+      this.memberFormSearch.roleId = 3
+      ;(this.memberFormSearch.Name = ''), (this.memberFormSearch.Code = '')
+      this.dialogSearchAccountVisible = true
+    },
+    onClickLeaderInput() {
+      this.memberFormSearch.roleId = 4
+      ;(this.memberFormSearch.Name = ''), (this.memberFormSearch.Code = '')
+      this.dialogSearchAccountVisible = true
+    },
+    removeDomain(item) {
+      if (this.groupForm.members.length > 2) {
+        var index = this.groupForm.members.indexOf(item)
+        if (index !== -1) {
+          this.groupForm.members.splice(index, 1)
+        }
+      } else {
+        this.$alert('Minimum member is 2. Can not remove')
+      }
+    },
+    addDomain() {
+      if (this.groupForm.members.length < 4) {
+        this.groupForm.members.push({
+          key: Date.now(),
+          value: '',
+        })
+      } else {
+        this.$alert('Maximum member is 4')
+      }
+    },
+    onClickMemberInput(index, member) {
+      this.currentMemberFlag = true
+      this.currentMemberField = {
+        index: index,
+        member: member,
+      }
+      this.memberFormSearch.roleId = 4
+      this.memberFormSearch.Name = ''
+      this.memberFormSearch.Code = ''
+
+      this.dialogSearchAccountVisible = true
+    },
+    onSearchMember() {
+      if (this.memberFormSearch.roleId == 4) {
+        this.store.dispatch('account/getAvailableMember', this.memberFormSearch)
+      }
+    },
+    handleSearchClose() {
+      this.dialogSearchAccountVisible = false
     },
   },
   mounted() {
