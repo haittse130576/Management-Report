@@ -119,9 +119,6 @@ const routes = [
         name: 'Report',
         component: () => import('@/views/user/Report.vue'),
       },
-
-
-
     ],
   },
   {
