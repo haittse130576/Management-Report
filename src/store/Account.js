@@ -5,7 +5,7 @@ const account = {
     accounts: [],
     accountResult: {},
     accountDetail: {},
-    listMembers: {},
+    members: {},
   },
   getters: {
     getAccounts(state) {
@@ -17,8 +17,8 @@ const account = {
     getAccountDetail(state) {
       return state.accountDetail
     },
-    getListMembers(state) {
-      return state.listMembers
+    getMembers(state) {
+      return state.members
     },
   },
   mutations: {
@@ -31,8 +31,8 @@ const account = {
     setAccountDetail(state, res) {
       state.accountDetail = res
     },
-    setListMembers(state, val) {
-      state.listMembers = val
+    setMembers(state, val) {
+      state.members = val
     },
   },
   actions: {
@@ -109,22 +109,12 @@ const account = {
       const res = await http.put(`api/accounts/update`, body)
       return res.data
     },
-    async getAvailableMember({ commit }, searchValue) {
-      const response = await http.get(`api/accounts/get-available-member`, {
+    async searchMember({ commit }, searchValue) {
+      const response = await http.get(`api/accounts/search-member`, {
         params: searchValue,
       })
-      if (response && response.statusCode === 200) {
-        commit('setListMembers', response.data.data)
-      }
-    },
-    async getAccountByRole({ commit }, roleId) {
-      const response = await http.get(
-        `/api/accounts/get-by-role?role=${roleId}`,
-      )
-      if (response && response.statusCode === 200) {
-        commit('setListMembers', response.data.data)
-      } else {
-        return {}
+      if (response && response.data) {
+        commit('setMembers', response.data.data)
       }
     },
   },

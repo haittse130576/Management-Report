@@ -58,11 +58,6 @@
       <el-col :span="12" :offset="0">
         <h3>Group Members</h3>
       </el-col>
-      <el-col :span="12" :offset="0">
-        <el-button type="primary" size="default" @click="onAddMember"
-          >Add Member</el-button
-        >
-      </el-col>
     </el-row>
 
     <el-table :data="accounts" border stripe v-loading="loading">
@@ -71,64 +66,32 @@
       </el-table-column>
       <el-table-column prop="email" label="Emal"> </el-table-column>
       <el-table-column prop="fullname" label="Full Name"> </el-table-column>
-      <el-table-column prop="roleName" label="Code" width="150px">
+      <el-table-column prop="roleInGroup" label="Role" width="150px">
       </el-table-column>
     </el-table>
   </div>
-  <el-dialog
-    title="Add New Member"
-    width="50%"
-    v-model="dialogVisible"
-    append-to-body
-  >
-    <div>
-      <el-form
-        :model="memberFormSearch"
-        ref="memberFormSearch"
-        :rules="rules"
-        label-width="80px"
-        :inline="false"
-        size="normal"
-      >
-        <el-row :gutter="20">
-          <el-col :span="12" :offset="0">
-            <el-form-item label="Code">
-              <el-input v-model="memberFormSearch.Code"></el-input>
-            </el-form-item>
-            <el-form-item label="Name">
-              <el-input v-model="memberFormSearch.Name"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" :offset="0">
-            <el-form-item label="Code">
-              <el-input v-model="memberFormSearch.Email"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="onSearchMember"
-                >Search</el-button
-              >
-              <el-button>Reset</el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-    </div>
-    <div>
-      <el-table :data="dataTable" border stripe>
-        <el-table-column prop="acountCode" label="Code" width="150px">
-        </el-table-column>
-        <el-table-column prop="fullname" label="Name"> </el-table-column>
-      </el-table>
-    </div>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="onSubmit('ruleForm')"
-          >Confirm</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
+  <div class="card bg-default mt-2">
+    <el-row class="m-2" :gutter="20">
+      <el-col :span="12" :offset="0">
+        <h3>Member Marks</h3>
+      </el-col>
+    </el-row>
+    <el-table :data="marks" border stripe v-loading="loading">
+      <el-table-column type="index" width="50" label="No." />
+      <el-table-column prop="accountCode" label="Code" width="150px">
+      </el-table-column>
+      <el-table-column prop="fullname" label="Full Name"> </el-table-column>
+      <el-table-column prop="report1" label="Report 1" />
+      <el-table-column prop="report2" label="Report 2" />
+      <el-table-column prop="report3" label="Report 3" />
+      <el-table-column prop="report4" label="Report 4" />
+      <el-table-column prop="report5" label="Report 5" />
+      <el-table-column prop="report6" label="Report 6" />
+      <el-table-column prop="report7" label="Report 7" />
+      <el-table-column prop="final" label="Final" />
+      <el-table-column prop="status" label="Status" />
+    </el-table>
+  </div>
 </template>
 
 <script>
@@ -173,12 +136,6 @@ export default {
         PageNumber: 1,
         PageSize: 10,
       },
-      dataTable: [
-        { acountCode: 'Se001', fullname: 'Nguyen Van A' },
-        { acountCode: 'Se001', fullname: 'Nguyen Van A' },
-        { acountCode: 'Se001', fullname: 'Nguyen Van A' },
-        { acountCode: 'Se001', fullname: 'Nguyen Van A' },
-      ],
       innerVisible: false,
       memberFormSearch: {
         Code: '',
@@ -202,6 +159,9 @@ export default {
     }),
     ...mapGetters('project', ['getProjects']),
     ...mapGetters('group', ['getGroup']),
+    ...mapState('mark', {
+      marks: (state) => state.marks,
+    }),
   },
 
   methods: {
@@ -220,7 +180,10 @@ export default {
         this.group.groupCode,
       )
       this.groupForm = this.getGroup
-      console.log(this.accounts)
+      await this.store.dispatch('mark/getMarksByGroupId', {
+        groupId: this.group.id,
+        isClosed: 1,
+      })
       this.loading = false
     },
     onSubmit(formName) {
