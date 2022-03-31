@@ -136,7 +136,7 @@ const routes = [
     children: [
       {
         path: '/teacher/teacher-home',
-        name: 'Instucting Group',
+        name: 'Teacher Home',
         component: () => import('@/views/admin/TeacherHome.vue'),
       },
 

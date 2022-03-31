@@ -132,19 +132,18 @@
           ></el-table-column>
         </el-table-column>
         <el-table-column
+          prop="final"
+          label="Final"
+          header-align="center"
+          align="center"
+        />
+        <el-table-column
           label="Status"
           header-align="center"
           align="center"
           prop="status"
         >
         </el-table-column>
-
-        <el-table-column
-          prop="final"
-          label="Final"
-          header-align="center"
-          align="center"
-        />
         <el-table-column align="center" label="Action" header-align="center">
           <template #default="scope">
             <el-button-group class="ml-4">
@@ -158,13 +157,19 @@
         </el-table-column>
       </el-table>
     </div>
+    <div class="card bg-default">
+      <span class="m-2">
+        <el-button type="primary" size="default" @click="sendMark"
+          >Send Mark</el-button
+        >
+      </span>
+    </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions, useStore } from 'vuex'
 import { Edit } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
-
 
 export default {
   name: 'Scores',
@@ -251,9 +256,7 @@ export default {
           })
         })
     },
-    // handleAccountDetailDialogClose() {
-    //   this.dialogVisible = false
-    // },
+    sendMark() {},
   },
   mounted() {
     this.init()
