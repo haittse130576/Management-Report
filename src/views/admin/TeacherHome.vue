@@ -13,7 +13,7 @@
             <CAccordion>
               <CAccordionItem :item-key="1">
                 <CAccordionHeader @click="mark(groupItem.id)"
-                  >Mark on Group members
+                  >Evaluation
                 </CAccordionHeader>
               </CAccordionItem>
               <CAccordionItem>

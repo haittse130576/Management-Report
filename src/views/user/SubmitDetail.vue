@@ -45,36 +45,16 @@
                   <div class="cell-item">File submissions</div>
                 </template>
                 {{submit.reportUrl}}
-                <CInputGroup>
-                  
-                  <CFormInput
-                    type="file"
-                    id="inputGroupFile04"
-                    aria-describedby="inputGroupFileAddon04"
-                    aria-label="Upload"
-                    @change="onChangeFile"
-                  />
-                </CInputGroup>
               </el-descriptions-item>
             </el-descriptions>
             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
               <CButton
-              class="me-md-2"
-                type="button"
-                color="danger"
-                variant="outline"
-                id="inputGroupFileAddon04"
-                @click="onCancel"
-                >Cancel</CButton
-              >
-
-              <CButton
                 type="button"
                 color="primary"
                 variant="outline"
-                id="inputGroupFileAddon04"
+                id="commentBtn"
                 @click="onSubmit"
-                >Submit</CButton
+                >Comment</CButton
               >
             </div>
           </div>
