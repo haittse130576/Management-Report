@@ -63,6 +63,8 @@ const mark = {
       )
       if (res && res.data) {
         commit('setMarks', res.data.data)
+        commit('setStudents', res.data.data)
+        return res.data.data
       }
     },
   },
