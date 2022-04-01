@@ -20,11 +20,6 @@ export default [
         component: 'CNavItem',
         name: 'Groups',
         to: '/admin/groups'
-      },
-      {
-        component: 'CNavItem',
-        name: 'Teacher Home',
-        to: '/teacher/teacher-home'
       }
     ],
   },
