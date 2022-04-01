@@ -3,7 +3,7 @@ module.exports = {
     headers: { 'Access-Control-Allow-Origin': '*' },
     proxy: {
       "/api": {
-        target: 'https://swp391.azurewebsites.net',
+        target: 'https://localhost:7250',
         changeOrigin: true,
         secure: false
       }
