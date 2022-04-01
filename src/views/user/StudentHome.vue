@@ -66,8 +66,6 @@ export default {
   },
   methods: {
     async projectList() {
-      var user = JSON.parse(localStorage.getItem('USER'))
-      console.log(user.account.email)
       let result = await this.store.dispatch(
         'group/getGroupByAccountAction',
         user.account.email,

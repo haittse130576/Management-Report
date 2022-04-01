@@ -9,6 +9,7 @@
     >
       <el-form
         :model="reportForm"
+        :rules="rules"
         ref="reportForm"
         label-width="100px"
         :inline="false"
@@ -47,9 +48,50 @@ export default {
     },
   },
   data() {
+    var checkdate=(rule,value,callback)=>{
+      var date1= new Date(this.reportForm.startTime);
+      console.log("Date", value);
+      var date2= new Date(value);
+      if(date1.getDate().valueOf()>date2.getDate().valueOf()){
+        return callback (new Error('Please input the start date is greater than the End Date'))
+      }else if (date1.getMonth().valueOf()>date2.getMonth().valueOf()){
+        return callback (new Error('Please input the start date is greater than the End Date'))
+      }else if (date1.getFullYear().valueOf()>date2.getFullYear().valueOf()){
+        return callback (new Error('Please input the start date is greater than the End Date'))
+      }
+      else{
+        callback()
+      }
+    }
     return {
       title: 'Update Report',
       store: useStore(),
+      rules: {
+        startTime: [
+          {
+            type: 'date',
+            required: true,
+            message: 'Please pick a date again',
+            trigger: 'blur',
+          },
+        ],
+        endTime: [
+          {
+            validator: checkdate,
+            type: 'date',
+            required: true,
+            message: 'Please pick a time again',
+            trigger: 'change',
+          },
+        ],
+        status: [
+          {
+            required: true,
+            message: 'Please pick a status',
+            trigger: 'change',
+          },
+        ],
+      },
     }
   },
 
@@ -59,6 +101,7 @@ export default {
       report: (state) => state.report,
     }),
     reportForm:{
+      
       get(){
         return this.report
       },
