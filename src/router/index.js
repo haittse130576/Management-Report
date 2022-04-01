@@ -106,13 +106,13 @@ const routes = [
       },
       {
         path: '/user/submit',
-        name: 'Submission',
-        component: () => import('@/views/user/SubmitDetail.vue'),
+        name: 'Submit',
+        component: () => import('@/views/user/StudentSubmit.vue'),
       },
       {
-        path: '/user/project',
-        name: 'Project',
-        component: () => import('@/views/user/Project.vue'),
+        path: '/user/score',
+        name: 'ScoresView',
+        component: () => import('@/views/user/ScoreView.vue'),
       },
       {
         path: 'user/report',

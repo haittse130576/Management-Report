@@ -9,10 +9,15 @@
             >
           </CCardHeader>
           <CCardBody>
-            <small>{{ groupItem.year}} - {{ groupItem.semester }}</small>
+            <small>{{ groupItem.year }} - {{ groupItem.semester }}</small>
             <CAccordion>
+              <CAccordionItem :item-key="1" >
+                <CAccordionHeader @click="mark(groupItem.id)"
+                  >Evaluation
+                </CAccordionHeader>
+              </CAccordionItem>
               <CAccordionItem>
-                <CAccordionHeader>List Report</CAccordionHeader>
+                <CAccordionHeader>List Report </CAccordionHeader>
                 <CAccordionBody>
                   <template v-for="item in this.reports" :key="item.id">
                     <CListGroup :item-key="2">
@@ -24,7 +29,8 @@
                           <div class="col">
                             <CAccordionBody class="d-flex flex-row-reverse"
                               >Due:
-                              {{ dateFormat(item.endTime) }}</CAccordionBody>
+                              {{ dateFormat(item.endTime) }}</CAccordionBody
+                            >
                           </div>
                         </div>
                       </CListGroupItem>
@@ -72,6 +78,12 @@ export default {
       console.log(this.reports)
     },
 
+    mark(val) {
+      const router = useRouter()
+      const obj = val
+      console.log('group ID is:' + obj)
+      this.$router.push({ name: 'ScoresView', params: { obj } })
+    },
     
     async reportDir(groupItem,item) {
       console.log('report',item)
