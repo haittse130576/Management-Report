@@ -183,34 +183,14 @@ export default {
       // this.students = await this.getMarksByGroup(tote)
       this.students = await this.store.dispatch('mark/getMarksByGroupId', {
         groupId: tote,
-        isClosed: 0,
+        isClosed: 1,
       })
       const sol = await this.store.dispatch('group/getGroupByIdAction', tote)
       this.group = sol.data.data
       console.log(this.group)
       console.log(this.students)
     },
-    // async onSubmit() {
-    //   this.searchValue = {
-    //     fullname: this.form.fullname,
-    //     email: this.form.email,
-    //     roleId: this.form.role,
-    //     status: this.form.status,
-    //   }
-    //   if (this.form.fullname.trim() === '') {
-    //     this.searchValue.fullname = null
-    //   }
-    //   if (this.form.email.trim() === '') {
-    //     this.searchValue.email = null
-    //   }
-    //   if (this.form.role === 'All') {
-    //     this.searchValue.roleId = 0
-    //   }
-    //   if (this.form.status.trim() === 'All') {
-    //     this.searchValue.status = null
-    //   }
-    //   this.searchResult = await this.searchListAccounts(this.searchValue)
-    // },
+
 
     async onEdit(index, row) {
       const score = {

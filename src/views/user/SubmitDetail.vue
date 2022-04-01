@@ -4,7 +4,7 @@
       <div class="m-3">
         <div class="row flex-row">
           <section class="col-9">
-            <h1 class="font-bold text-uppercase fs-3">Project Name</h1>
+            <h1 class="font-bold text-uppercase fs-3">Report Details</h1>
           </section>
         </div>
         <div class="submission mt-2">
@@ -32,7 +32,7 @@
                 <template #label>
                   <div class="cell-item">Due date</div>
                 </template>
-                  {{dateFormat(submit.endTime)}}
+                  {{dateFormat(report.endTime)}}
               </el-descriptions-item>
               <el-descriptions-item>
                 <template #label>
@@ -44,19 +44,9 @@
                 <template #label>
                   <div class="cell-item">File submissions</div>
                 </template>
-                {{submit.reportUrl}}
+                <el-link>{{submit.reportUrl}}</el-link>
               </el-descriptions-item>
             </el-descriptions>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-              <CButton
-                type="button"
-                color="primary"
-                variant="outline"
-                id="commentBtn"
-                @click="onSubmit"
-                >Comment</CButton
-              >
-            </div>
           </div>
         </div>
       </div>
@@ -64,12 +54,14 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapActions, mapState } from 'vuex'
+import { mapGetters, mapActions, useStore, mapState } from 'vuex'
 import moment from 'moment'
 export default {
   name: 'Submission', 
    data() {
     return {
+      store: useStore(),
+      report: {},
     }
   },
   computed: {
@@ -79,7 +71,9 @@ export default {
   },
   methods: {
     async projectList() {
-     
+     const rep = await this.store.dispatch('report/getReportById',this.submit.reportId)
+     this.report = rep
+     console.log(this.report)
     },
 
     dateFormat(date) {
