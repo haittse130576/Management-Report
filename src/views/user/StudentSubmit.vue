@@ -44,24 +44,7 @@
                 <template #label>
                   <div class="cell-item">File submissions</div>
                 </template>
-                <div class="admin-group">
-                  <CInputGroup>
-                    <CFormInput
-                      type="file"
-                      id="inputGroupFile04"
-                      aria-describedby="inputGroupFileAddon04"
-                      aria-label="Upload"
-                      @change="onChangeFile"
-                    />
-                    <CButton
-                      type="button"
-                      color="secondary"
-                      variant="outline"
-                      id="inputGroupFileAddon04"
-                      @click="onSubmit"
-                      >Submit</CButton>
-                  </CInputGroup>
-                </div>
+                
               </el-descriptions-item>
             </el-descriptions>
             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
@@ -82,9 +65,10 @@
 </template>
 <script>
 import { mapGetters, mapActions, mapState } from 'vuex'
+import { computed, ref } from 'vue'
 import moment from 'moment'
 export default {
-  name: 'Submission',
+  name: 'Submit',
   data() {
     return {}
   },
