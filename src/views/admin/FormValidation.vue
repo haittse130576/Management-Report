@@ -15,13 +15,13 @@
         class="demo-ruleForm"
       >
         <el-form-item label="Full name" prop="fullname">
-          <el-input v-model="ruleForm.fullname"></el-input>
+          <el-input v-model="ruleForm.fullname" ></el-input>
         </el-form-item>
-        <el-form-item label="Email" prop="email">
-          <el-input v-model="ruleForm.email"></el-input>
+        <el-form-item label="Email" prop="email" >
+          <el-input v-model="ruleForm.email" placeholder="Please input email" @change="onCheckExist"></el-input>
         </el-form-item>
         <el-form-item label="Account Code" prop="accountCode">
-          <el-input v-model="ruleForm.accountCode"></el-input>
+          <el-input v-model="ruleForm.accountCode" placeholder="Please input Account Code" @change="onCheckExist"></el-input>
         </el-form-item>
         <el-form-item label="Phone" prop="phone">
           <el-input v-model="ruleForm.phone"></el-input>
@@ -67,7 +67,34 @@ export default {
     },
   },
   data() {
+        var checkEmail = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('Please input the email'))
+      }
+      setTimeout(async () => {
+        var res = await this.store.dispatch('account/checkEmailExist', value)
+        if (res && res.data.data) {
+          callback(new Error('The email is existed'))
+        } else {
+          callback()
+        }
+      }, 1000)
+    }
+    var checkCode = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('Please input the Account Code'))
+      }
+      setTimeout(async () => {
+        var res = await this.store.dispatch('account/checkCodeExist', value)
+        if (res && res.data.data) {
+          callback(new Error('The Account Code is existed'))
+        } else {
+          callback()
+        }
+      }, 1000)
+    }
     return {
+      
       title: 'Create New Account',
       store: useStore(),
       searchValue: {},
@@ -83,6 +110,7 @@ export default {
         id: '',
         status: 'Active',
       },
+      emailCheck: false,
       rules: {
         fullname: [
           {
@@ -98,6 +126,10 @@ export default {
           // },
         ],
         email: [
+                    {
+            validator: checkEmail,
+            trigger: 'blur',
+          },
           {
             required: true,
             message: 'Please select email zone',
@@ -112,6 +144,10 @@ export default {
           },
         ],
         accountCode: [
+          {
+            validator: checkCode,
+            trigger: 'blur',
+          },
           {
             required: true,
             message: 'Please select code',
