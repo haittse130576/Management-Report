@@ -20,6 +20,9 @@
         <el-form-item label="Full Name">
           <el-input v-model="account.fullname"></el-input>
         </el-form-item>
+        <el-form-item label="Account Code">
+          <el-input v-model="account.accountCode"></el-input>
+        </el-form-item>
         <el-form-item label="Phone">
           <el-input v-model="account.phone"></el-input>
         </el-form-item>

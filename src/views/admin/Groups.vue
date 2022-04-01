@@ -316,13 +316,6 @@ export default {
             validator: checkGroupCode,
             trigger: 'blur',
           },
-          {
-            required: true,
-            min: 8,
-            max: 8,
-            message: 'Length must be 8',
-            trigger: 'blur',
-          },
         ],
         semester: [
           {
@@ -513,6 +506,13 @@ export default {
     onClickRow(row, column, event) {
       this.checkValid = false
       var member = { id: row.id, name: row.fullname }
+      this.groupForm.members.map((item) => {
+        if (item.id == this.groupForm.leader.id || item.id == member.id) {
+          this.checkValid = true
+          console.log(item.id)
+          this.$alert(`Duplicate memember ${member.name}. Please input again.`)
+        }
+      })
       if (this.memberFlag) {
         let indexMember = this.currentMemberField.index
         let tmpMembers = this.groupForm.members.map((item, index) =>
@@ -528,12 +528,9 @@ export default {
       if (this.metorFlag) {
         this.groupForm.mentor = member
       }
-      const checkMemberDuplicate = this.groupForm.members.map((item) => {
-        if (item.id == this.groupForm.leader.id || item.id == member.id) {
-          this.checkValid = true
-          this.$alert(`Duplicate memember ${member.name}. Please input again.`)
-        }
-      })
+      console.log('leader', this.groupForm.leader.id)
+      console.log('member', member.id)
+
       this.handleSearchClose()
     },
     resetFlag() {

@@ -4,7 +4,6 @@ export default [
     name: 'Dashboard',
     to: '/admin/dashboard',
     icon: 'cil-speedometer',
-    
   },
   {
     component: 'CNavGroup',
@@ -14,7 +13,7 @@ export default [
       {
         component: 'CNavItem',
         name: 'List Accounts',
-        to: '/admin/list-accounts'
+        to: '/admin/list-accounts',
       },
       {
         component: 'CNavItem',
@@ -32,13 +31,13 @@ export default [
       {
         component: 'CNavItem',
         name: 'List Projects',
-        to: '/admin/list-projects'
+        to: '/admin/list-projects',
       },
       {
         component: 'CNavItem',
         name: 'Manage Reports',
-        to: '/admin/reports'
+        to: '/admin/reports',
       },
     ],
-  }
+  },
 ]

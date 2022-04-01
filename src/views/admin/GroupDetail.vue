@@ -183,6 +183,7 @@ export default {
       await this.store.dispatch('mark/getMarksByGroupId', {
         groupId: this.group.id,
         isClosed: 1,
+        roleId: 2,
       })
       this.loading = false
     },

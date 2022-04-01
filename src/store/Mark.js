@@ -59,7 +59,7 @@ const mark = {
     },
     async getMarksByGroupId({ commit }, params) {
       const res = await http.get(
-        `api/marks/get-by-group?groupId=${params.groupId}&isClosed=${params.isClosed}`,
+        `api/marks/get-by-group?groupId=${params.groupId}&isClosed=${params.isClosed}&roleId=${params.roleId}`,
       )
       if (res && res.data) {
         commit('setMarks', res.data.data)
