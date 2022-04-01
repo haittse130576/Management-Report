@@ -131,19 +131,6 @@
               </el-input-number> </template
           ></el-table-column>
         </el-table-column>
-        <el-table-column
-          prop="final"
-          label="Final"
-          header-align="center"
-          align="center"
-        />
-        <el-table-column
-          label="Status"
-          header-align="center"
-          align="center"
-          prop="status"
-        >
-        </el-table-column>
         <el-table-column align="center" label="Action" header-align="center">
           <template #default="scope">
             <el-button-group class="ml-4">
@@ -189,12 +176,15 @@ export default {
     ...mapActions(['getMarksByGroup', 'updateMark']),
     async init() {
       const router = useRouter()
-      console.log('ID is:' + this.$route.params.obj)
       var tote = this.$route.params.obj
       if (tote === null) {
         this.$router.go(-1)
       }
-      this.students = await this.getMarksByGroup(tote)
+      // this.students = await this.getMarksByGroup(tote)
+      this.students = await this.store.dispatch('mark/getMarksByGroupId', {
+        groupId: tote,
+        isClosed: 0,
+      })
       const sol = await this.store.dispatch('group/getGroupByIdAction', tote)
       this.group = sol.data.data
       console.log(this.group)
@@ -242,8 +232,9 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning',
       })
-        .then(() => {
-          this.updateMark(score)
+        .then(async () => {
+          await this.store.dispatch('mark/updateMark', score)
+          // this.updateMark(score)
           this.$message({
             type: 'success',
             message: 'Update completed',
@@ -263,5 +254,4 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

@@ -56,24 +56,40 @@
   <div class="card bg-default mt-2">
     <el-row class="m-2" :gutter="20">
       <el-col :span="12" :offset="0">
-        <h3 >Group Members</h3>
-      </el-col>
-      <el-col :span="12" :offset="0">
-        <el-button type="primary" size="default" @click="onAddMember">Add Member</el-button>
-        
+        <h3>Group Members</h3>
       </el-col>
     </el-row>
-    
+
     <el-table :data="accounts" border stripe v-loading="loading">
-      <el-table-column type="index" width="50" label="No."/>
+      <el-table-column type="index" width="50" label="No." />
       <el-table-column prop="accountCode" label="Code" width="150px">
       </el-table-column>
-      <el-table-column prop="email" label="Emal">
+      <el-table-column prop="email" label="Emal"> </el-table-column>
+      <el-table-column prop="fullname" label="Full Name"> </el-table-column>
+      <el-table-column prop="roleInGroup" label="Role" width="150px">
       </el-table-column>
-      <el-table-column prop="fullname" label="Full Name" >
+    </el-table>
+  </div>
+  <div class="card bg-default mt-2">
+    <el-row class="m-2" :gutter="20">
+      <el-col :span="12" :offset="0">
+        <h3>Member Marks</h3>
+      </el-col>
+    </el-row>
+    <el-table :data="marks" border stripe v-loading="loading">
+      <el-table-column type="index" width="50" label="No." />
+      <el-table-column prop="accountCode" label="Code" width="150px">
       </el-table-column>
-      <el-table-column prop="roleName" label="Code" width="150px">
-      </el-table-column>
+      <el-table-column prop="fullname" label="Full Name"> </el-table-column>
+      <el-table-column prop="report1" label="Report 1" />
+      <el-table-column prop="report2" label="Report 2" />
+      <el-table-column prop="report3" label="Report 3" />
+      <el-table-column prop="report4" label="Report 4" />
+      <el-table-column prop="report5" label="Report 5" />
+      <el-table-column prop="report6" label="Report 6" />
+      <el-table-column prop="report7" label="Report 7" />
+      <el-table-column prop="final" label="Final" />
+      <el-table-column prop="status" label="Status" />
     </el-table>
   </div>
 </template>
@@ -86,6 +102,7 @@ export default {
     return {
       store: useStore(),
       loading: true,
+      dialogVisible: false,
       groupForm: {
         id: '',
         groupCode: '',
@@ -110,20 +127,41 @@ export default {
           },
         ],
       },
+      memberForm: {
+        role: 'Member',
+        accountId: '',
+      },
+      searchValue: {
+        RoleId: 4,
+        PageNumber: 1,
+        PageSize: 10,
+      },
+      innerVisible: false,
+      memberFormSearch: {
+        Code: '',
+        Name: '',
+        Email: '',
+        Role: 4,
+      },
     }
   },
   computed: {
     ...mapState('group', {
       group: (state) => state.group,
     }),
-    ...mapState('account',{
+    ...mapState('account', {
       accounts: (state) => state.accounts,
+      listAccountSelect: (state) => state.listAccountSelect,
+      listMember: (state) => state.listMembers,
     }),
     ...mapState('project', {
       projects: (state) => state.projects,
     }),
     ...mapGetters('project', ['getProjects']),
     ...mapGetters('group', ['getGroup']),
+    ...mapState('mark', {
+      marks: (state) => state.marks,
+    }),
   },
 
   methods: {
@@ -137,9 +175,15 @@ export default {
         this.group.id,
       )
       await this.store.dispatch('project/getActiveProject')
-      await this.store.dispatch('account/getAccountByGroup', this.group.groupCode)
+      await this.store.dispatch(
+        'account/getAccountByGroup',
+        this.group.groupCode,
+      )
       this.groupForm = this.getGroup
-      console.log(this.accounts);
+      await this.store.dispatch('mark/getMarksByGroupId', {
+        groupId: this.group.id,
+        isClosed: 1,
+      })
       this.loading = false
     },
     onSubmit(formName) {
@@ -154,6 +198,18 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    async onAddMember() {
+      this.searchValue.Semester = this.group.semester
+      this.searchValue.Year = this.group.year
+      await this.store.dispatch('account/getAvailableMember', this.searchValue)
+      this.dialogVisible = true
+    },
+    handleClose() {
+      this.dialogVisible = false
+    },
+    onClickAccountInput(value) {
+      this.innerVisible = true
     },
   },
   mounted() {

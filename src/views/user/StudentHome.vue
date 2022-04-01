@@ -51,7 +51,7 @@ import { useRouter } from 'vue-router'
 import { mapGetters, mapActions, useStore, mapState } from 'vuex'
 import moment from 'moment'
 export default {
-  name: 'Teacher Home',
+  name: 'Student Home',
   data() {
     return {
       groups: [],
@@ -84,6 +84,7 @@ export default {
       console.log('group ID is:' + obj)
       this.$router.push({ name: 'ScoresView', params: { obj } })
     },
+    
     async reportDir(groupItem,item) {
       console.log('report',item)
             console.log('group',groupItem)
@@ -98,7 +99,7 @@ export default {
         query
       )
 
-      this.$router.push({ path: '/teacher/submit'})
+      this.$router.push({ path: '/user/submit'})
     },
     dateFormat(date) {
       if (date == undefined) {

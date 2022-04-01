@@ -5,6 +5,7 @@ const groups = {
     groups: [],
     group: {},
     listAccounts: [],
+    groupParams: {},
   },
   getters: {
     getGroups: (state) => {
@@ -19,7 +20,7 @@ const groups = {
           semester: state.group.semester,
           year: state.group.year.toString(),
           projectId: state.group.projectId.toString(),
-          projectName:state.group.projectName
+          projectName: state.group.projectName,
         }
       }
       return group
@@ -37,6 +38,17 @@ const groups = {
     },
     setListAccounts(state, val) {
       state.listAccounts = val
+    },
+    setGroupParams(state, group) {
+      state.groupParams = {
+        semester: group.semester,
+        year: group.year,
+        projectId: group.projectId,
+        groupCode: group.groupCode,
+        mentorId: group.mentor.id,
+        leaderId: group.leader.id,
+        members: group.members.map((member) => member.id),
+      }
     },
   },
   actions: {
@@ -91,13 +103,9 @@ const groups = {
         console.log(error)
       }
     },
-    async searchGroup({ commit }, prams) {
+    async searchGroup({ commit }, params) {
       const res = await http.get(`api/groups/search`, {
-        params: {
-          GroupCode: prams.GroupCode,
-          Semester: prams.Semester,
-          Year: prams.Year,
-        },
+        params: params,
       })
       if (res && res.status === 200) {
         if (res.data.data) {
@@ -106,13 +114,9 @@ const groups = {
       }
       return null
     },
-    async insertGroup(context, group) {
-      const res = await http.post(`api/groups`, {
-        semester: group.semester,
-        year: group.year,
-        projectId: group.projectId,
-        groupCode: group.groupCode,
-      })
+    async insertGroup({ state }) {
+      const body = state.groupParams
+      const res = await http.post(`api/groups/insert`, body)
       if (res && res.status === 200) {
         return res
       }
