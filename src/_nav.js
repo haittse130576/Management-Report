@@ -18,8 +18,8 @@ export default [
       {
         component: 'CNavItem',
         name: 'Groups',
-        to: '/admin/groups',
-      },
+        to: '/admin/groups'
+      }
     ],
   },
   {
