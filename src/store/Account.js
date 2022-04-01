@@ -117,6 +117,26 @@ const account = {
         commit('setMembers', response.data.data)
       }
     },
+    async checkEmailExist(context, email) {
+      const res = await http.get(`api/accounts/check-mail-exist`, {
+        params: {
+          email: email,
+        },
+      })
+      if (res && res.status === 200) {
+        return res
+      }
+    },
+    async checkCodeExist(context, accountCode) {
+      const res = await http.get(`api/accounts/check-code-exist`, {
+        params: {
+          accountCode: accountCode,
+        },
+      })
+      if (res && res.status === 200) {
+        return res
+      }
+    },
   },
 }
 export default account

@@ -14,7 +14,7 @@ const routes = [
 
     meta: {
       requiresAuth: true,
-      authorize: [Role.Admin, Role.Staff]
+      authorize: [Role.Admin, Role.Staff],
     },
     redirect: '/admin/dashboard',
     children: [
@@ -79,10 +79,8 @@ const routes = [
             name: 'Profile',
             component: () => import('@/views/user/Profile.vue'),
           },
-
         ],
       },
-
     ],
   },
   {
@@ -91,33 +89,22 @@ const routes = [
     component: UserLayout,
     meta: {
       requiresAuth: true,
-      authorize: [Role.Student, Role.Teacher]
+      authorize: [Role.Student, Role.Teacher],
     },
     redirect: '/user/home',
     children: [
       {
         path: '/user/home',
         name: 'Home',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () =>
-          import(/* webpackChunkName: "dashboard" */ '@/views/user/StudentHome.vue'),
+          import(
+            /* webpackChunkName: "dashboard" */ '@/views/user/StudentHome.vue'
+          ),
       },
       {
-        path: '/user/submit',
-        name: 'Submit',
-        component: () => import('@/views/user/StudentSubmit.vue'),
-      },
-      {
-        path: '/user/score',
-        name: 'ScoresView',
-        component: () => import('@/views/user/ScoreView.vue'),
-      },
-      {
-        path: 'user/report',
-        name: 'Report',
-        component: () => import('@/views/user/Report.vue'),
+        path: '/user/project',
+        name: 'Project',
+        component: () => import('@/views/user/Submission.vue'),
       },
     ],
   },
@@ -128,7 +115,7 @@ const routes = [
     component: UserLayout,
     meta: {
       requiresAuth: true,
-      authorize: [Role.Teacher]
+      authorize: [Role.Teacher],
     },
     children: [
       {
@@ -147,8 +134,6 @@ const routes = [
         name: 'Submission',
         component: () => import('@/views/user/SubmitDetail.vue'),
       },
-
-
     ],
   },
 
@@ -167,11 +152,16 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: () => import('@/views/pages/Login.vue'),
-      }
+      },
     ],
   },
 
-  { path: '/404', meta: { requiresFail: true }, component: () => import(/* webpackChunkName: "demo" */ '@/views/pages/Page404.vue') },
+  {
+    path: '/404',
+    meta: { requiresFail: true },
+    component: () =>
+      import(/* webpackChunkName: "demo" */ '@/views/pages/Page404.vue'),
+  },
   { path: '/:pathMatch(.*)*', redirect: '/404' },
 ]
 
@@ -182,27 +172,24 @@ const router = createRouter({
     // always scroll to top
     return { top: 0 }
   },
-
 })
 
 router.beforeEach(async (to, from, next) => {
   const { authorize } = to.meta
-  const currentUser = localStorage.getItem('USER');
+  const currentUser = localStorage.getItem('USER')
   const user = JSON.parse(currentUser)
-  if(to.matched.some((record) => record.meta.requiresAuth)){
-    if(currentUser === null){
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (currentUser === null) {
       next('/login')
-    }else{
-
-      if(authorize.length && !authorize.includes(user.account.roleName)){
-        alert("You dont have access permission")
+    } else {
+      if (authorize.length && !authorize.includes(user.account.roleName)) {
+        alert('You dont have access permission')
         return next({
-          path: '/login'
+          path: '/login',
         })
-      }else{
+      } else {
         next()
       }
-
     }
   }
   next()
