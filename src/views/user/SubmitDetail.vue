@@ -44,7 +44,7 @@
                 <template #label>
                   <div class="cell-item">File submissions</div>
                 </template>
-                <el-link>{{submit.reportUrl}}</el-link>
+                <el-link @click="openFile">{{submit.reportUrl}}</el-link>
               </el-descriptions-item>
             </el-descriptions>
           </div>
@@ -82,6 +82,9 @@ export default {
       }
       return moment(date).format(' DD-MM-YYYY - hh:mm')
     },
+    openFile(){
+      window.location.href = this.submit.reportUrl
+    }
   },
 
   mounted() {

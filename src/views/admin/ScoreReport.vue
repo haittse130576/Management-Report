@@ -104,6 +104,7 @@
             label="Report 6"
             header-align="center"
             align="center"
+            
           >
             <template #default="scope">
               <el-input-number
@@ -138,6 +139,7 @@
                 type="primary"
                 :icon="Edit"
                 @click="onEdit(scope.$index, scope.row)"
+                :disabled="scope.row.isClose===true"
               ></el-button>
             </el-button-group>
           </template>
@@ -146,16 +148,14 @@
     </div>
     <div class="card bg-default">
       <span class="m-2">
-        <el-button type="primary" size="default" @click="sendMark"
-          >Send Mark</el-button
-        >
+        <el-button type="primary" @click="sendMark">Send Mark</el-button>
       </span>
     </div>
   </div>
 </template>
 <script>
 import { mapGetters, mapActions, useStore } from 'vuex'
-import { Edit } from '@element-plus/icons-vue'
+import { Edit, InfoFilled } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -183,14 +183,14 @@ export default {
       // this.students = await this.getMarksByGroup(tote)
       this.students = await this.store.dispatch('mark/getMarksByGroupId', {
         groupId: tote,
-        isClosed: 1,
+        isClosed: 0,
+        roleId: 3,
       })
       const sol = await this.store.dispatch('group/getGroupByIdAction', tote)
       this.group = sol.data.data
       console.log(this.group)
       console.log(this.students)
     },
-
 
     async onEdit(index, row) {
       const score = {
@@ -203,8 +203,6 @@ export default {
         report5: row.report5,
         report6: row.report6,
         report7: row.report7,
-        status: row.status,
-        final: row.final,
       }
       console.log(score)
       this.$confirm('Confirm update mark. Continue?', 'Warning', {
@@ -227,7 +225,31 @@ export default {
           })
         })
     },
-    sendMark() {},
+    sendMark() {
+      this.$confirm('Confirm send mark to FPTU. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      })
+        .then(async () => {
+          this.students.forEach(Element => {
+            Element.isClose = true
+            this.store.dispatch('mark/updateMark', Element)
+
+          });
+          console.log(this.students)
+          this.$message({
+            type: 'success',
+            message: 'Send completed',
+          })
+        })
+        .catch(() => {
+          this.$message({
+            type: 'info',
+            message: 'Canceled',
+          })
+        })
+    },
   },
   mounted() {
     this.init()
