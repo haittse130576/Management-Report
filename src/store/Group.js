@@ -55,7 +55,7 @@ const groups = {
     async getGroupsAction(context) {
       const response = await http.get('/api/groups')
       if (response.data != null) {
-        context.commit('setGroups', response.data)
+        context.commit('setGroups', response.data.data)
       }
       return response
     },
@@ -74,19 +74,13 @@ const groups = {
       }
     },
     async getGroupByAccountAction(context, email) {
-      try {
-        if (email) {
-          const response = await http.get(
-            '/api/groups/get-by-account?email=' + email,
-          )
-          if (response.status === 200) {
-            context.commit('setGroups', response.data)
-          }
-          return response
-        }
-      } catch (error) {
-        console.log(error)
+      const response = await http.get(
+        '/api/groups/get-by-account?email=' + email,
+      )
+      if (response.status === 200) {
+        context.commit('setGroups', response.data.data)
       }
+      return response
     },
     async getAccountByGroupIdAction(context, groupId) {
       try {
