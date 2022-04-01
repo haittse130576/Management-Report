@@ -106,6 +106,7 @@ export default {
       this.students = await this.store.dispatch('mark/getMarksByGroupId', {
         groupId: tote,
         isClosed: 1,
+        roleId: 4,
       })
       const sol = await this.store.dispatch('group/getGroupByIdAction', tote)
       this.group = sol.data.data

@@ -10,6 +10,11 @@
         <CCardBody>
           <small>{{ groupItem.year }} - {{ groupItem.semester }}</small>
           <CAccordion>
+             <CAccordionItem :item-key="1">
+                <CAccordionHeader @click="mark(groupItem.id)"
+                  >Evaluation
+                </CAccordionHeader>
+              </CAccordionItem>
             <CAccordionItem>
               <CAccordionHeader>List Report</CAccordionHeader>
               <CAccordionBody>
@@ -70,7 +75,11 @@ export default {
         this.$router.push('/login')
       }
     },
-
+    mark(val) {
+      const obj = val
+      console.log('group ID is:' + obj)
+      this.$router.push({ name: 'ScoresView', params: { obj } })
+    },
     async reportDir(groupItem, item) {
       const query = {
         groupId: groupItem.id,

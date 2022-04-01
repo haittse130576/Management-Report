@@ -106,6 +106,11 @@ const routes = [
         name: 'Project',
         component: () => import('@/views/user/Submission.vue'),
       },
+      {
+        path: '/user/scoreview',
+        name: 'ScoresView',
+        component: () => import('@/views/user/ScoreView.vue'),
+      },
     ],
   },
   {
