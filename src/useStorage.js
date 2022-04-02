@@ -13,14 +13,7 @@ const useStorage = () => {
     try {
       const storageRef = ref(storage, filePath)
       const uploadTask = uploadBytesResumable(storageRef, file)
-      getMetadata(forestRef)
-        .then((metadata) => {
-          // Metadata now contains the metadata for 'images/forest.jpg'
-          console.log('Meta', metadata)
-        })
-        .catch((error) => {
-          // Uh-oh, an error occurred!
-        })
+      
       uploadTask.on(
         'state_changed',
         (snapshot) => {
