@@ -161,13 +161,13 @@ const routes = [
     ],
   },
 
-  {
-    path: '/404',
-    meta: { requiresFail: true },
-    component: () =>
-      import(/* webpackChunkName: "demo" */ '@/views/pages/Page404.vue'),
-  },
-  { path: '/:pathMatch(.*)*', redirect: '/404' },
+  // {
+  //   path: '/404',
+  //   meta: { requiresFail: true },
+  //   component: () =>
+  //     import(/* webpackChunkName: "demo" */ '@/views/pages/Page404.vue'),
+  // },
+  // { path: '/:pathMatch(.*)*', redirect: '/404' },
 ]
 
 const router = createRouter({
@@ -180,6 +180,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  console.log('URL:', to)
   const { authorize } = to.meta
   const currentUser = localStorage.getItem('USER')
   const user = JSON.parse(currentUser)

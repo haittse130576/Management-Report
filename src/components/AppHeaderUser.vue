@@ -10,6 +10,7 @@
         </CNavItem>
       </CHeaderNav>
       <CHeaderNav>
+        <p>{{ user.account.fullname }}</p>
         <AppHeaderDropdownAccnt />
       </CHeaderNav>
     </CContainer>
@@ -28,8 +29,10 @@ export default {
     AppHeaderDropdownAccnt,
   },
   setup() {
+    const user = JSON.parse(localStorage.getItem('USER'))
     return {
       logo,
+      user,
     }
   },
 }

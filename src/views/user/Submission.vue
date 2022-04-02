@@ -76,7 +76,6 @@ export default {
   data() {
     return {
       store: useStore(),
-      file: '',
       firebase: useStorage(),
     }
   },
@@ -117,6 +116,7 @@ export default {
       if (reportUrl) {
         // downloadURL = JSON.parse(reportUrl)
         this.submitForm.reportUrl = reportUrl
+        this.submitForm.submitTime = new Date()
         const res = await this.store.dispatch(
           'submit/updateSubmit',
           this.submitForm,
