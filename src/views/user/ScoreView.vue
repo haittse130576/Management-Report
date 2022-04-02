@@ -1,14 +1,18 @@
 <template>
-  <div class="card bg-default">
-    <ul prop="group">
+  <div class="card bg-default" >
+    <h3 class="m-3">View Score</h3>
+  </div>
+  <div class="card bg-default mt-2">
+    
+    <ul prop="group" class="mt-3">
       <h4>
-        <small>Project: </small>
+        <small>Project Name: </small>
         <strong>{{ group.projectName }}</strong>
       </h4>
-      <h6>
+      <h5>
         <small>Group: </small>
         <strong> {{ group.groupCode }}</strong>
-      </h6>
+      </h5>
       <h6>
         <strong>{{ mark.accountCode }} - {{ mark.fullname }}</strong>
       </h6>
@@ -17,7 +21,7 @@
       <div class="submission-info">
         <el-descriptions
           class="margin-top"
-          title="Mark"
+
           :column="1"
           :size="size"
           border
@@ -75,6 +79,7 @@
       </div>
     </div>
   </div>
+  
 </template>
 <script>
 import { mapGetters, mapActions, useStore, mapState } from 'vuex'
