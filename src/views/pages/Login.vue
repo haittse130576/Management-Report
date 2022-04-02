@@ -45,10 +45,10 @@ export default {
           let roleName = user.account.roleName
           switch (roleName) {
             case 'Admin':
-              router.push('/admin/dashboard')
+              router.push('/admin/list-accounts')
               break
-            case 'Staff':
-              router.push('/admin/dashboard')
+            case 'Manager':
+              router.push('/admin/groups')
               break
             case 'Teacher':
               router.push('/teacher/teacher-home')
@@ -70,5 +70,4 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

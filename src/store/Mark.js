@@ -67,6 +67,14 @@ const mark = {
         return res.data.data
       }
     },
+    async getMarksByAccountId({ commit }, params) {
+      const res = await http.get(
+        `api/marks/get-by-account?accountId=${params.accountId}`,
+      )
+      if (res && res.data) {
+        commit('setMark', res.data.data)
+      }
+    },
   },
 }
 export default mark
