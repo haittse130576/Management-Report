@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { h, resolveComponent } from 'vue'
 
 import DefaultLayout from '@/layouts/DefaultLayout'
@@ -8,78 +7,59 @@ import UserLayout from '@/layouts/UserLayout'
 
 const routes = [
   {
-    path: '/',
-    name: 'Dashboard',
     component: DefaultLayout,
 
-    meta: {
-      requiresAuth: true,
-      authorize: [Role.Admin, Role.Staff],
-    },
-    redirect: '/admin/dashboard',
     children: [
       {
-        path: '/admin/dashboard',
-        name: 'Dashboard',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-          import(/* webpackChunkName: "dashboard" */ '@/views/Dashboard.vue'),
-      },
-      {
-        path: '/',
-        redirect: '/admin/list-accounts',
-        name: 'Accounts',
-        component: {
-          render() {
-            return h(resolveComponent('router-view'))
-          },
+        path: '/admin/list-accounts',
+        name: 'Account',
+        component: () => import('@/views/admin/ListAccount.vue'),
+        meta: {
+          requiresAuth: true,
+          authorize: [Role.Admin],
         },
-        children: [
-          {
-            path: '/admin/list-accounts',
-            name: 'List Accounts',
-            component: () => import('@/views/admin/ListAccount.vue'),
-          },
-          {
-            path: '/admin/groups',
-            name: 'Groups',
-            component: () => import('@/views/admin/Groups.vue'),
-          },
-          {
-            path: '/admin/groups/detail',
-            name: 'Group Detail',
-            component: () => import('@/views/admin/GroupDetail.vue'),
-          },
-        ],
       },
       {
-        path: '/',
-        redirect: '/admin/list-projects',
+        path: '/admin/groups',
+        name: 'Groups',
+        component: () => import('@/views/admin/Groups.vue'),
+        meta: {
+          requiresAuth: true,
+          authorize: [Role.Admin, Role.Staff],
+        },
+      },
+      {
+        path: '/admin/groups/detail',
+        name: 'Group Detail',
+        component: () => import('@/views/admin/GroupDetail.vue'),
+        meta: {
+          requiresAuth: true,
+          authorize: [Role.Admin, Role.Staff],
+        },
+      },
+      {
+        path: '/admin/list-projects',
         name: 'Projects',
-        component: {
-          render() {
-            return h(resolveComponent('router-view'))
-          },
+        component: () => import('@/views/admin/ListProjects.vue'),
+        meta: {
+          requiresAuth: true,
+          authorize: [Role.Admin, Role.Staff],
         },
-        children: [
-          {
-            path: '/admin/list-projects',
-            name: 'List Projects',
-            component: () => import('@/views/admin/ListProjects.vue'),
-          },
-          {
-            path: '/admin/reports',
-            name: 'Manage Reports',
-            component: () => import('@/views/admin/ManageReport.vue'),
-          },
-          {
-            path: '/user/profile',
-            name: 'Profile',
-            component: () => import('@/views/user/Profile.vue'),
-          },
-        ],
+      },
+      {
+        path: '/admin/reports',
+        name: 'Schedule Reports',
+        component: () => import('@/views/admin/ManageReport.vue'),
+        meta: {
+          requiresAuth: true,
+          authorize: [Role.Admin, Role.Staff],
+        },
+      },
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: () => import('@/views/user/Profile.vue'),
+        meta: { requiresVisitor: true },
       },
     ],
   },
@@ -89,7 +69,7 @@ const routes = [
     component: UserLayout,
     meta: {
       requiresAuth: true,
-      authorize: [Role.Student, Role.Teacher],
+      authorize: [Role.Teacher],
     },
     redirect: '/user/home',
     children: [

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div text-align="right">
+  <div class="card bg-default">
+    <div class="m-3">
       <el-button type="primary" @click="onEdit">Create New Report</el-button>
     </div>
     <div class="mt-2 card bg-default">
@@ -86,7 +86,7 @@
     />
   </div>
 </template>
-<script >
+<script>
 import CreateNewReport from './CreateNewReport.vue'
 import { ref } from 'vue'
 import { mapGetters, mapActions, useStore, mapState } from 'vuex'
@@ -172,5 +172,4 @@ export default {
   },
 }
 </script>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

@@ -13,6 +13,9 @@
       </CHeaderNav>
     </CContainer>
     <CHeaderDivider />
+    <CContainer fluid>
+      <AppBreadcrumb />
+    </CContainer>
   </CHeader>
 </template>
 
