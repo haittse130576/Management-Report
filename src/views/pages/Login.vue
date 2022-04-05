@@ -54,7 +54,7 @@ export default {
               router.push('/teacher/teacher-home')
               break
             case 'Student':
-              router.push('/user/Home')
+              router.push('/user/home')
               break
             default:
               router.push('/login')

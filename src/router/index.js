@@ -69,7 +69,7 @@ const routes = [
     component: UserLayout,
     meta: {
       requiresAuth: true,
-      authorize: [Role.Teacher],
+      authorize: [Role.Student],
     },
     redirect: '/user/home',
     children: [
