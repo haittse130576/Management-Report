@@ -265,7 +265,7 @@ export default {
         projectName: this.formSearch.projectName,
         status: this.formSearch.status,
         pageNumber: val,
-        pageSize: this.paging.pageSize,
+        pageSize: this.projects.pageSize,
       }
       if (this.formSearch.status === 'All') {
         this.searchValue.status = null

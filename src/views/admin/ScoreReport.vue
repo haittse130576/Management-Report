@@ -232,16 +232,31 @@ export default {
         type: 'warning',
       })
         .then(async () => {
-          this.students.forEach(Element => {
-            Element.isClose = true
-            this.store.dispatch('mark/updateMark', Element)
+          // this.students.forEach(Element => {
+          //   Element.isClose = true
+          //   let mark = (Element.report1 + Element.report2 +Element.report3+ Element.report4 + Element.report5 + Element.report6+Element.report7)/7
+          //   if(mark >=5){
+          //     Element.status = 'Pass'
+          //   }else{
+          //     Element.status = 'Fail'
+          //   }
+          //   this.store.dispatch('mark/updateMark', Element)
 
-          });
+          // });
+          const res =await this.store.dispatch('mark/sendMark', this.students)
           console.log(this.students)
-          this.$message({
+          if(res && res.data.status === 'success'){
+            this.$message({
             type: 'success',
             message: 'Send completed',
           })
+          }else{
+            this.$message({
+            type: 'danger',
+            message: 'Send failed!',
+          })
+          }
+          
         })
         .catch(() => {
           this.$message({
