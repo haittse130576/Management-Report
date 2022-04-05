@@ -143,6 +143,10 @@ const account = {
         return res
       }
     },
+    async checkMentor({commit}, params){
+      const res = await http.get(`api/account-group/check-mentor?accountId=${params.accountId}&semester=${params.semester}&year=${params.year}`)
+      return res.data.data
+    }
   },
 }
 export default account

@@ -5,7 +5,7 @@
         >Add New</el-button
       >
     </span>
-    <el-dialog title="Create New Group" v-model="dialogFormVisible">
+    <el-dialog title="Create New Group" v-model="dialogFormVisible" @close="handleClose">
       <el-form
         :model="groupForm"
         label-width="150px"
@@ -152,7 +152,7 @@
 
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">Cancel</el-button>
+          <el-button @click="handleClose">Cancel</el-button>
           <el-button @click="addDomain">New member</el-button>
           <el-button type="primary" @click="onSubmit('ruleForm')"
             >Confirm</el-button
@@ -273,11 +273,41 @@ export default {
       setTimeout(async () => {
         var res = await this.store.dispatch('group/checkGroupCodeExist', value)
         if (res && res.data) {
-          callback(new Error('The group code is existed'))
+          return callback(new Error('The group code is existed'))
         } else {
           callback()
         }
       }, 1000)
+    }
+    var checkMentor = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('Please input the mentor'))
+      } else {
+        if (this.groupForm.mentor.id != '') {
+          setTimeout(async () => {
+            let params = {
+              accountId: this.groupForm?.mentor.id,
+              semester: this.groupForm?.semester,
+              year: this.groupForm?.year,
+            }
+            var res = await this.store.dispatch('account/checkMentor', params)
+            if (res >= 5) {
+              return callback(new Error('Mentor had guided through 5 groups'))
+            }
+          }, 1000)
+        }else{
+          callback(new Error('Please input the mentor'))
+        }
+      }
+      callback()
+    }
+    var checkLeader = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('Please input the leader'))
+      }
+     if(this.groupForm.leader.id == ''){
+       callback(new Error('Please input the leader'))
+     }
     }
     return {
       store: useStore(),
@@ -341,15 +371,23 @@ export default {
         ],
         mentor: [
           {
+            validator: checkMentor,
+            trigger: 'blur',
+          },
+          {
             required: true,
-            message: 'Please input mentor code',
+            message: 'Please input mentor',
             trigger: 'blur',
           },
         ],
         leader: [
           {
+            validator: checkLeader,
+            trigger: 'blur',
+          },
+          {
             required: true,
-            message: 'Please input leader code',
+            message: 'Please input leader',
             trigger: 'blur',
           },
         ],
@@ -507,13 +545,24 @@ export default {
       this.checkValid = false
       var member = { id: row.id, name: row.fullname }
       this.groupForm.members.map((item) => {
-        if (item.id == this.groupForm.leader.id || item.id == member.id) {
+        if (item.id === this.groupForm.leader.id) {
           this.checkValid = true
           console.log(item.id)
-          this.$alert(`Duplicate memember ${member.name}. Please input again.`)
+          this.$alert(`Duplicate memember ${item.name}. Please input again.`)
+        }
+        if (item.id === member.id) {
+          this.checkValid = true
+          console.log(item.id)
+          this.$alert(`Duplicate memember ${item.name}. Please input again.`)
         }
       })
-      if (this.memberFlag) {
+      if(member.id === this.groupForm.leader.id){
+        this.checkValid = true
+          console.log(member.id)
+          this.$alert(`Duplicate memember ${member.name}. Please input again.`)
+      }
+      if(!this.checkValid){
+        if (this.memberFlag) {
         let indexMember = this.currentMemberField.index
         let tmpMembers = this.groupForm.members.map((item, index) =>
           index === indexMember
@@ -528,6 +577,7 @@ export default {
       if (this.metorFlag) {
         this.groupForm.mentor = member
       }
+      }
       console.log('leader', this.groupForm.leader.id)
       console.log('member', member.id)
 
@@ -538,6 +588,26 @@ export default {
         (this.leaderFlag = false),
         (this.metorFlag = false)
     },
+    handleClose(){
+      this.dialogFormVisible = false
+      this.groupForm =  {
+        groupCode: '',
+        semester: 'Summer',
+        year: '2022',
+        projectId: '',
+        mentor: { id: '', name: '' },
+        leader: { id: '', name: '' },
+        members: [
+          {
+            key: 1,
+            value: '',
+          },
+          { key: 2, value: '' },
+        ],
+      },
+    this.resetForm('ruleForm'),
+    this.resetFlag()
+    }
   },
   mounted() {
     this.init()
