@@ -12,11 +12,12 @@
     "
   >
     <CSidebarBrand>
-      <CIcon
+      <img :src="logo" class="sidebar-brand-full" />
+      <!-- <CIcon
         custom-class-name="sidebar-brand-full"
         :icon="logoNegative"
         :height="35"
-      />
+      /> -->
       <CIcon
         custom-class-name="sidebar-brand-narrow"
         :icon="sygnet"
@@ -37,6 +38,7 @@ import { useStore } from 'vuex'
 import { AppSidebarNav } from './AppSidebarNav'
 import { logoNegative } from '@/assets/brand/logo-negative'
 import { sygnet } from '@/assets/brand/sygnet'
+import logo from '@/assets/brand/fpt.png'
 export default {
   name: 'AppSidebar',
   components: {
@@ -49,6 +51,7 @@ export default {
       sygnet,
       sidebarUnfoldable: computed(() => store.state.sidebarUnfoldable),
       sidebarVisible: computed(() => store.state.sidebarVisible),
+      logo,
     }
   },
 }

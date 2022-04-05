@@ -1,12 +1,25 @@
 <template>
   <CHeader position="sticky" class="mb-4">
     <CContainer fluid>
-      <CHeaderBrand class="" href="#/user/home"
+      <CHeaderBrand v-if="user.account.roleId === 4" href="#/user/home"
+        >FPT UNIVERSITY HCM</CHeaderBrand
+      >
+      <CHeaderBrand
+        v-if="user.account.roleId === 3"
+        href="#/teacher/teacher-home"
         >FPT UNIVERSITY HCM</CHeaderBrand
       >
       <CHeaderNav class="d-none d-md-flex me-auto">
         <CNavItem>
-          <CNavLink href="#/user/home"> Home </CNavLink>
+          <CNavLink v-if="user.account.roleId === 4" href="#/user/home">
+            Home
+          </CNavLink>
+          <CNavLink
+            v-if="user.account.roleId === 3"
+            href="#/teacher/teacher-home"
+          >
+            Home
+          </CNavLink>
         </CNavItem>
       </CHeaderNav>
       <CHeaderNav>

@@ -1,14 +1,15 @@
-import { defineComponent, h, onMounted, ref, resolveComponent } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
-
 import {
   CBadge,
-  CSidebarNav,
-  CNavItem,
   CNavGroup,
+  CNavItem,
   CNavTitle,
+  CSidebarNav,
 } from '@coreui/vue'
+import { RouterLink, useRoute } from 'vue-router'
+import { defineComponent, h, onMounted, ref, resolveComponent } from 'vue'
+
 import nav from '@/_nav.js'
+import navStaff from '@/_nav_staff.js'
 
 const normalizePath = (path) =>
   decodeURI(path)
@@ -127,15 +128,27 @@ const AppSidebarNav = defineComponent({
             },
           )
     }
-
-    return () =>
-      h(
-        CSidebarNav,
-        {},
-        {
-          default: () => nav.map((item) => renderItem(item)),
-        },
-      )
+    let user = JSON.parse(localStorage.getItem('USER')).account
+    if (user.roleName === 'Admin') {
+      return () =>
+        h(
+          CSidebarNav,
+          {},
+          {
+            default: () => nav.map((item) => renderItem(item)),
+          },
+        )
+    }
+    if (user.roleName === 'Manager') {
+      return () =>
+        h(
+          CSidebarNav,
+          {},
+          {
+            default: () => navStaff.map((item) => renderItem(item)),
+          },
+        )
+    }
   },
 })
 export { AppSidebarNav }
