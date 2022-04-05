@@ -117,8 +117,10 @@ export default {
         // downloadURL = JSON.parse(reportUrl)
         this.submitForm.reportUrl = reportUrl
         this.submitForm.submitTime = new Date()
+        console.log('---',this.submitForm);
         const res = await this.store.dispatch(
           'submit/updateSubmit',
+
           this.submitForm,
         )
         if (res && res.data.status === 'success') {

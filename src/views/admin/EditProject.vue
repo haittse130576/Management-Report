@@ -9,7 +9,7 @@
     >
       <el-form
         :model="project"
-        ref="form"
+        ref="getProject"
         label-width="100px"
         :inline="false"
         size="normal"
@@ -27,51 +27,84 @@
         <el-form-item label="Description">
           <el-input type="textarea" v-model="project.description"></el-input>
         </el-form-item>
-
-        <el-popconfirm
-          confirm-button-text="OK"
-          cancel-button-text="No, Thanks"
-          :icon="InfoFilled"
-          title="Are you sure to Update this?"
-        >
-          <template #reference>
-            <el-button type="success">Update</el-button>
-          </template>
-        </el-popconfirm>
-        <el-button type="" class="btnCancel">Cancel</el-button>
-      </el-form>
+        </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleClose">Cancel</el-button>
+          <el-button type="primary" @click="submitForm('getProject')"
+            >Submit</el-button
+          >
+            </span>
+      </template>
+        
+          
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import { useStore } from 'vuex'
 export default {
   name: 'EditProject',
   props: {
     dialogVisible: {
       type: Boolean,
-    },
-    project: {
-      type: Object,
-    },
+    }
+    
   },
   data() {
     return {
       title: 'Update Project',
       store: useStore(),
-     
+      searchValue: {},
     }
   },
   computed: {
-   
+    ...mapGetters('project', ['getProject']),
+   project: {
+      get() {
+        return this.getProject
+      },
+      set(value) {
+        this.store.commit('project/setProject', value)
+      },
+    },
   },
   mounted() {},
   methods: {
-    ...mapMutations(['setProject']),
+    
     handleClose() {
+      this.resetForm('getProject')
       this.$emit('close')
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          var response = await this.store.dispatch(
+            'project/update',
+            this.project,
+          )
+          if (response.status === 'success') {
+            this.$notify({
+              title: 'Success',
+              message: 'Insert successfully',
+              type: 'success',
+            })
+
+            this.resetForm('getProject')
+            await this.store.dispatch('project/search', this.searchValue)
+            this.handleClose()
+            
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields()
     },
   },
   watch: {
@@ -82,7 +115,5 @@ export default {
 }
 </script>
 <style lang="scss">
-.btnCancel {
-  float: right;
-}
+
 </style>

@@ -36,7 +36,7 @@
     </el-row>
   </div>
   <div class="card bg-default mt-3">
-    <el-table ref="tableRef" :data="projects" style="width: 100%" stripe v-loading="loading">
+    <el-table ref="tableRef" :data="projects.items" style="width: 100%" stripe v-loading="loading">
       <el-table-column
         type="index"
         label="No."
@@ -82,10 +82,10 @@
       class="d-flex flex-row-reverse"
       background
       layout="prev, pager, next"
-      :total="paging.totalCount"
-      :page-size="paging.pageSize"
-      :current-page="paging.pageIndex"
-      :page-count="paging.totalPages"
+      :total="projects.totalCount"
+      :page-size="projects.pageSize"
+      :current-page="projects.pageIndex"
+      :page-count="projects.totalPages"
       @current-change="setPage"
     >
     </el-pagination>
@@ -133,20 +133,19 @@
   />
 </template>
 <script>
-import { useStore } from 'vuex'
+import { mapState, useStore } from 'vuex'
 import EditProject from './EditProject.vue'
 export default {
   components: { EditProject },
-  computed: {},
+  computed: {
+  },
   data() {
     return {
       loading: true,
-      paging: {},
       project: {},
       dialogVisible: false,
       dialogVisibleEditProject: false,
       store: useStore(),
-      projects: [],
       projectForm: {
         projectName: '',
         description: '',
@@ -168,12 +167,17 @@ export default {
       searchValue: {},
     }
   },
+  computed:{
+    ...mapState('project',{
+      projects: (state) => state.projects
+    })
+  },
   methods: {
     async init() {
-      this.loading = true
-      this.paging = await this.store.dispatch('project/search', this.searchValue)
-      this.projects = this.paging.items
+      this.loading = true     
+      const res = await this.store.dispatch('project/search', this.searchValue)
       this.loading = false
+
     },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
@@ -233,12 +237,21 @@ export default {
           type: 'warning',
         },
       )
-        .then(() => {
-          this.store.dispatch('project/inactive', id)
-          this.$message({
+        .then(async() => {
+          const res = await this.store.dispatch('project/inactive', id)
+          if(res && res.status === 'success'){
+            this.$message({
             type: 'success',
-            message: 'Update completed',
+            message: 'Update completed!',
           })
+          await this.init()
+          }else{
+            this.$message({
+            type: 'danger',
+            message: 'Update failed!',
+          })
+          }
+          
         })
         .catch(() => {
           this.$message({
@@ -252,7 +265,7 @@ export default {
         projectName: this.formSearch.projectName,
         status: this.formSearch.status,
         pageNumber: val,
-        pageSize: this.paging.pageSize,
+        pageSize: this.projects.pageSize,
       }
       if (this.formSearch.status === 'All') {
         this.searchValue.status = null

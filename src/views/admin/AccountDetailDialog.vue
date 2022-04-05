@@ -30,7 +30,7 @@
           <el-input v-model="account.address"></el-input>
         </el-form-item>
         <el-form-item label="Role">
-          <el-select v-model="account.role">
+          <el-select v-model="account.roleId">
             <el-option
               v-for="role in getListRoles"
               :key="role.id"
@@ -74,6 +74,7 @@
   </div>
 </template>
 <script>
+import account from '@/store/Account'
 import { mapGetters } from 'vuex'
 import { useStore } from 'vuex'
 export default {
@@ -111,6 +112,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
+          
           var response = await this.store.dispatch(
             'account/update',
             this.getAccountDetail,

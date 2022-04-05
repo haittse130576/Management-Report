@@ -75,6 +75,10 @@ const mark = {
         commit('setMark', res.data.data)
       }
     },
+    async sendMark(context, marks){
+      const res = await http.post(`/api/marks/submit-mark`,marks)
+      return res
+    }
   },
 }
 export default mark
