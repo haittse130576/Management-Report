@@ -9,7 +9,7 @@ const account = {
   },
   getters: {
     getAccounts(state) {
-      return state.accounts
+        return state.accounts
     },
     getAccountResult(state) {
       return state.accountResult
@@ -23,7 +23,13 @@ const account = {
   },
   mutations: {
     setAccounts(state, val) {
-      state.accounts = val
+      const user = localStorage.getItem('USER')
+      if(user){
+        const userObj = JSON.parse(user).account
+        const accountTmp = val?.filter(item => item.id != userObj.id)
+        state.accounts = accountTmp
+      }
+      
     },
     setAccountResult(state, res) {
       state.accountResult = res
